@@ -35,6 +35,26 @@ class ArticleController extends Controller{
           return $this->render('add',['model'=>$model,'_model'=>'_model']);
           }
     }
+    public function actionEdit($id){
+      $model=Article::findOne(['id'=>$id]);
+      $_model=new ArticleDetail();
+      $request=new Request();
+      if($request->isPost){
+          $model->load($request->post());
+          if($model->validate()){
+              $model->create_time = time();
+              $model->save(false);
+              $_model->content = $model->content;
+              $_model->save(false);
+              \Yii::$app->session->setFlash('success','修改成功');
+              return $this->redirect(['article/index']);
+          }else{
+              var_dump($model->getErrors());
+          }
+      }else{
+          return $this->render('add',['model'=>$model,'_model'=>'_model']);
+          }
+    }
     public function actionDel(){
         $id = \Yii::$app->request->post('id');
         $model = Article::findOne(['id'=>$id]);
@@ -44,6 +64,32 @@ class ArticleController extends Controller{
             return 'success';
         }else{
             return '该记录不存在或已被删除';
+        }
+    }
+    public function actionXian(){
+        //查询数据
+        $model = Article::find()->all();
+        //展示页面
+        return $this->render('dgd',['model'=>$model]);
+    }
+    public function actionUpdate($id){
+        $model=Article::findOne(['id'=>$id]);
+        $_model=new ArticleDetail();
+        $request=new Request();
+        if($request->isPost){
+            $model->load($request->post());
+            if($model->validate()){
+                $model->create_time = time();
+                $model->save(false);
+                $_model->content = $model->content;
+                $_model->save(false);
+                \Yii::$app->session->setFlash('success','修改成功');
+                return $this->redirect(['article/index']);
+            }else{
+                var_dump($model->getErrors());
+            }
+        }else{
+            return $this->render('add',['model'=>$model,'_model'=>'_model']);
         }
     }
 }

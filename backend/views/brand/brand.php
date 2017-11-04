@@ -1,5 +1,6 @@
 <?php
 ?>
+    <a href="/index.php?r=brand/xian" class="glyphicon glyphicon-trash"> 回收站</a>
 <a href="/index.php?r=brand/add" class="btn btn-primary">添加</a>
 <table class="table table-bordered">
     <tr>

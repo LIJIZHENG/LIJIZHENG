@@ -68,6 +68,32 @@ class BrandController extends Controller{
         }else{
             return '该记录不存在或已被删除';
         }
-
+    }
+    public function actionXian(){
+        //查询数据
+        $model = Brand::find()->all();
+        //展示页面
+        return $this->render('dgd',['model'=>$model]);
+    }
+    public function actionUpdate($id){
+        $brand =Brand::findOne(['id'=>$id]);
+        $request=new Request();
+        if($request->isPost){
+            $brand->load($request->post());
+            $brand->imgFile=UploadedFile::getInstance($brand,'imgFile');
+            if($brand->validate()){
+                $ext = $brand->imgFile->extension;
+                $file='/upload/'.uniqid().'.'.$ext;
+                $brand->imgFile->saveAs(\Yii::getAlias('@webroot').$file);
+                $brand->logo=$file;
+                $brand->save(false);
+                \Yii::$app->session->setFlash('success','修改成功');
+                return $this->redirect(['brand/index']);
+            }else{
+                var_dump($brand->getErrors());
+            }
+        }else{
+            return $this->render('update',['brand'=>$brand]);
+        }
     }
 }

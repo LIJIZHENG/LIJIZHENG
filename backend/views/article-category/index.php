@@ -1,6 +1,7 @@
 <?php
 ?>
-<a href="" class="btn-primary btn-xs">添加</a>
+    <a href="/index.php?r=article-category/xian" class="glyphicon glyphicon-trash"> 回收站</a>
+<a href="/index.php?r=article-category/add" class="btn-primary btn-xs">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -30,7 +31,7 @@ echo yii\widgets\LinkPager::widget([
 ]);
 ?>
 <?php
-$url = \yii\helpers\Url::to(['brand/del']);
+$url = \yii\helpers\Url::to(['article-category/del']);
 $this->registerJs(
     <<<JS
     $(".btn-del").click(function(){
