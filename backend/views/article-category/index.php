@@ -17,7 +17,10 @@
         <td><?=$v->intro?></td>
         <td><?=$v->sort?></td>
         <td><?=$v->status?></td>
-        <td></td>
+        <td>
+            <a href="javascript:;" class="btn-del btn btn-primary btn-xs" data-id="<?=$v['id']?>">删除</a>
+            <a href="<?=\yii\helpers\Url::to(['article-category/edit','id'=>$v['id']])?>" class="btn btn-primary btn-xs">修改</a>
+        </td>
     </tr>
     <?php endforeach;?>
 </table>
@@ -25,3 +28,25 @@
 echo yii\widgets\LinkPager::widget([
     'pagination'=>$pager,
 ]);
+?>
+<?php
+$url = \yii\helpers\Url::to(['brand/del']);
+$this->registerJs(
+    <<<JS
+    $(".btn-del").click(function(){
+        if(confirm('是否删除该用户?删除后无法恢复!')){
+            var url = "{$url}";
+            var id = $(this).attr('data-id');
+            var that = this;
+            $.post(url,{id:id},function(data){
+                if(data == 'success'){
+                    $(that).closest('tr').fadeOut();
+                }else{
+                    //删除失败
+                    alert(data);
+                }
+            });
+        }
+    });
+JS
+);

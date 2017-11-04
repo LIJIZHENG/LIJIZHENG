@@ -1,6 +1,7 @@
 <?php
 namespace backend\models;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 class ArticleCategory extends ActiveRecord{
     public $imgFile;
     public function attributeLabels(){
@@ -16,7 +17,9 @@ class ArticleCategory extends ActiveRecord{
             [['name','intro'],'required'],
             ['status','required'],
             [['sort'],'integer'],
-            ['imgFile','file','extensions'=>['jpg','jpeg','png','gif'],'skipOnEmpty'=>false],
         ];
+    }
+    public static function getArticleCategory(){
+        return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
     }
 }
