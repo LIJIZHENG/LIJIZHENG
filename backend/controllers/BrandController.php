@@ -1,12 +1,19 @@
 <?php
 namespace backend\controllers;
+use yii\helpers\Json;
 use yii\web\Controller;
 use backend\models\Brand;
 use yii\web\Request;
 use yii\web\UploadedFile;
 use yii\data\Pagination;
 use yii\data\Sort;
+// 引入鉴权类
+use Qiniu\Auth;
+
+// 引入上传类
+use Qiniu\Storage\UploadManager;
 class BrandController extends Controller{
+    public $enableCsrfValidation = false;
     public function actionIndex(){
         $query = Brand::find();
         $pager = new Pagination();
@@ -19,14 +26,9 @@ class BrandController extends Controller{
         $brand = new Brand();
         $request=new Request();
         if($request->isPost){
+//            var_dump($request->post());die;
             $brand->load($request->post());
-            $brand->imgFile=UploadedFile::getInstance($brand,'imgFile');
             if($brand->validate()){
-//                var_dump($brand);die;
-                $ext = $brand->imgFile->extension;
-                $file='/upload/'.uniqid().'.'.$ext;
-                $brand->imgFile->saveAs(\Yii::getAlias('@webroot').$file,false);
-                $brand->logo=$file;
                 $brand->save();
                 \Yii::$app->session->setFlash('success','添加成功');
                 return $this->redirect(['brand/index']);
@@ -94,6 +96,35 @@ class BrandController extends Controller{
             }
         }else{
             return $this->render('update',['brand'=>$brand]);
+        }
+    }
+    public function actionUpload()
+    {
+        if (\Yii::$app->request->isPost) {
+            $imgFile = UploadedFile::getInstanceByName('file');
+            //判断是否有文件上传
+            if ($imgFile) {
+                $fileName = '/upload/' . uniqid() . '.' . $imgFile->extension;
+                $imgFile->saveAs(\Yii::getAlias('@webroot') . $fileName, 0);
+                //=========将图片上传到七牛云============
+                $accessKey = "8lAynpHl_dE0OMQBBDh51AU5tDr_ohHeISv6ovQd";
+                $secretKey = "sUK1MSRAdnhG9CB9fWD250txwvN7ur_IDVmTTlwD";
+                //对象存储 空间名称
+                $bucket = "php0711";
+                $domain = '
+oyxs2huf5.bkt.clouddn.com';
+                $auth = new Auth($accessKey, $secretKey);
+                $token = $auth->uploadToken($bucket);
+                $filePath = \Yii::getAlias('@webroot') . $fileName;
+                $key = $fileName;
+                $uploadMgr = new UploadManager();
+                list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+                if ($err !== null) {
+                    return Json::encode(['error' => $err]);
+                } else {
+                    return Json::encode(['url' => 'http://' . $domain . '/' . $fileName]);
+                }
+            }
         }
     }
 }
