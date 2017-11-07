@@ -8,7 +8,7 @@ use yii\data\Pagination;
 class GoodsCategoryController extends \yii\web\Controller
 {
     public function actionIndex(){
-        $query = GoodsCategory::find();
+        $query = GoodsCategory::find()->where(['!=','status','-1']);
         $pager = new Pagination();
         $pager->totalCount=$query->count();
         $pager->pageSize=5;
@@ -19,10 +19,8 @@ class GoodsCategoryController extends \yii\web\Controller
         $id = \Yii::$app->request->post('id');
         $model = GoodsCategory::findOne(['id'=>$id]);
             if($model){
-                $model->status=-1;
-                $model->update();
+                $model->delete();
                 return 'success';
-
             }else{
                 return '该记录不存在或已被删除';
             }
@@ -43,8 +41,8 @@ class GoodsCategoryController extends \yii\web\Controller
                     //添加子节点
                     $parent = GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($parent);
-//                    \Yii::$app->session->setFlash('success', '添加成功');
-                    return $this->redirect('index.php?r=goodscategory/index');
+                    \Yii::$app->session->setFlash('success', '添加成功');
+                    return $this->redirect('index.php?r=goods-category/index');
                 }
             }
         }
@@ -70,7 +68,8 @@ class GoodsCategoryController extends \yii\web\Controller
                     //添加子节点
                     $parent = GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($parent);
-                    echo '修改';
+                    \Yii::$app->session->setFlash('success', '修改');
+                    return $this->redirect('index.php?r=goods-category/index');
                 }
             }
         }

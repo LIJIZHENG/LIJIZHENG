@@ -9,7 +9,7 @@ use yii\web\UploadedFile;
 
 class ArticleCategoryController extends Controller{
     public function actionIndex(){
-        $query = ArticleCategory::find();
+        $query = ArticleCategory::find()->where(['!=','status','-1']);
         $pager = new Pagination();
         $pager->totalCount=$query->count();
         $pager->pageSize=1;

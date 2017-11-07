@@ -15,7 +15,7 @@ use Qiniu\Storage\UploadManager;
 class BrandController extends Controller{
     public $enableCsrfValidation = false;
     public function actionIndex(){
-        $query = Brand::find();
+        $query = Brand::find()->where(['!=','status','-1']);
         $pager = new Pagination();
         $pager->totalCount = $query->count();
         $pager->pageSize=1;

@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use backend\models\GoodsCategoryQuery;
 use creocoder\nestedsets\NestedSetsBehavior;
 use yii\db\ActiveRecord;
@@ -85,5 +86,8 @@ class GoodsCategory extends ActiveRecord {
     //获取Ztree需要的数据
     public static function getZtreeNodes(){
         return self::find()->select(['id','name','parent_id'])->asArray()->all();
+    }
+    public static function getGoodsCategory(){
+        return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
     }
 }

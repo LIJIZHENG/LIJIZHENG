@@ -24,6 +24,7 @@ class m171106_033136_create_goods_table extends Migration
             'sort'=>$this->integer(),
             'create_time'=>$this->integer(),
             'view_times'=>$this->integer(),
+            'status'=>$this->integer(),
         ]);
     }
 

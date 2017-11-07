@@ -8,7 +8,7 @@ use yii\web\Request;
 
 class ArticleController extends Controller{
     public function actionIndex(){
-        $query = Article::find();
+        $query = Article::find()->where(['!=','status','-1']);
         $pager = new Pagination();
         $pager->totalCount = $query->count();
         $pager->pageSize=1;

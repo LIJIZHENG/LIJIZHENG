@@ -2,6 +2,8 @@
 namespace backend\models;
 use yii\db\ActiveRecord;
 use Yii;
+use yii\helpers\ArrayHelper;
+
 /**
  * This is the model class for table "brand".
  *
@@ -59,4 +61,7 @@ public static function getStatusOptions($hidden_del=true){
              'status' => '状态',
          ];
 }
+    public static function getBrand(){
+        return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
+    }
 }
