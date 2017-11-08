@@ -4,7 +4,7 @@
  */
 $form=\yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'name')->textInput()->label('名称');
-//echo $form->field($model,'sn')->textInput()->label('货号');
+echo $form->field($model,'sn')->textInput()->label('货号');
 /**
 * @var $this \yii\web\view
 */
@@ -63,6 +63,6 @@ echo $form->field($model,'stock')->textInput();
 echo $form->field($model,'is_on_sale')->radioList(['1'=>'在售','0'=>'下架']);
 echo $form->field($model,'status')->radioList(['1'=>'正常','0'=>'回收站']);
 echo $form->field($model,'sort')->textInput()->label('排序');
-echo $form->field($model,'content')->widget('kucha\ueditor\UEditor',[]);
+echo $form->field($_model,'content')->widget('kucha\ueditor\UEditor',[]);
 echo \yii\bootstrap\Html::submitInput('提交');
 \yii\bootstrap\ActiveForm::end();

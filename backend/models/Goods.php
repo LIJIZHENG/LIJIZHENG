@@ -17,21 +17,14 @@ use creocoder\nestedsets\NestedSetsBehavior;
  * @property string $intro
  */
 class Goods extends ActiveRecord{
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'goods';
-    }
-
+    public $content;
     /**
      * @inheritdoc
      */
     public function rules(){
         return [
-            [['name','colum','sn','logo','market_price','shop_price'],'required'],
-            [['brand_id'], 'string'],
+            [['name','logo','content','goods_category_id','market_price','shop_price'],'required'],
+            [['brand_id','sn'], 'string'],
             [['sort', 'status','is_on_sale','stock','view_times'], 'integer'],
             [['logo'], 'string', 'max' => 255],
         ];
@@ -49,43 +42,18 @@ class Goods extends ActiveRecord{
             'name' => '名称',
             'sn'=>'货号',
             'logo' => 'LOGO',
-            'brand_id' => '商品分类id',
+            'brand_id' => '品牌分类id',
             'market_price'=>'市场价格',
             'shop_price'=>'商品价格',
             'stock'=>'库存',
+            'content'=>'文本编译器',
             'is_on_sale'=>'是否在售(1在售 0下架)',
             'sort' => '排序',
+            'count'=>'商品数',
+            'day'=>'日期',
             'status' => '状态(1正常0回收站)',
             'view_times'=>'浏览次数',
-            'colum'=>'描述',
+            'goods_category_id'=>'商品分类id'
         ];
-    }
-    public function behaviors() {
-        return [
-            'tree' => [
-                'class' => NestedSetsBehavior::className(),
-                'treeAttribute' => 'tree',//这里必须打开,因为使用到了多颗树
-                // 'leftAttribute' => 'lft',
-                // 'rightAttribute' => 'rgt',
-                // 'depthAttribute' => 'depth',
-            ],
-        ];
-    }
-
-    public function transactions()
-    {
-        return [
-            self::SCENARIO_DEFAULT => self::OP_ALL,
-        ];
-    }
-
-    public static function find()
-    {
-        return new GoodsCategoryQuery(get_called_class());
-    }
-
-    //获取Ztree需要的数据
-    public static function getZtreeNodes(){
-        return self::find()->select(['id','name','goods_category_id'])->asArray()->all();
     }
 }

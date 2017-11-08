@@ -1,45 +1,24 @@
 <?php
-namespace backend\controllers;
+namespace backend\models;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class Goods_intro extends ActiveRecord{
-    public $imgFile;
-    public static function getStatusOptions($hidden_del=true){
-        $options =  [
-            -1=>'删除', 0=>'隐藏', 1=>'正常'
-        ];
-        if($hidden_del){
-            unset($options['-1']);
-        }
-        return $options;
-    }
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'brand';
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['goods_id','path'],'required']
+            [['goods_id','content'],'required']
         ];
     }
-
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
             'goods_id'=>'商品id',
-            'path'=>'图片地址',
+            'content'=>'描述',
             ];
     }
+//    public static function getGoods_intro(){
+//        return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
+//    }
 }

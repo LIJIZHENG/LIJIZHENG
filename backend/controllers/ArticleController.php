@@ -32,7 +32,7 @@ class ArticleController extends Controller{
               var_dump($model->getErrors());
           }
       }else{
-          return $this->render('add',['model'=>$model,'_model'=>'_model']);
+          return $this->render('add',['model'=>$model,'_model'=>$_model]);
           }
     }
     public function actionEdit($id){

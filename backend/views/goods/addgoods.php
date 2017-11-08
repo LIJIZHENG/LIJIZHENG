@@ -3,12 +3,10 @@
  * @var $this \yii\web\View
  */
 $form=\yii\bootstrap\ActiveForm::begin();
-echo $form->field($model,'name')->textInput()->label('名称');
-//echo $form->field($model,'sn')->textInput()->label('货号');
 /**
-* @var $this \yii\web\view
-*/
-echo $form->field($model,'logo')->hiddenInput();
+ * @var $this \yii\web\view
+ */
+//echo $form->field($model,'path')->hiddenInput();
 //引入css
 $this->registerCssFile('@web'.'/webuploader/webuploader.css');
 //引入js
@@ -39,8 +37,8 @@ var uploader = WebUploader.create({
 uploader.on('uploadSuccess',function(file ,response) {
       // console.debug(response);
     // $('#'+file.id).addClass('upload-state-done')
-    $("#img").attr('src',response.url);
-    $("#goods-logo").val(response.url);
+   $("<tr><td><img src='"+response.url+"'></td><td></td></tr>").appendTo('table')
+    $("#brand-logo").val(response.url);
 });
 JS
 );
@@ -52,17 +50,13 @@ JS
             <div id="filePicker">选择文件</div>
         </div>
     </div>
-    <div><img id="img" ></div>
-<?php
-
-echo $form->field($model,'goods_category_id')->dropDownList(\backend\models\GoodsCategory::getGoodsCategory());
-echo $form->field($model,'brand_id')->dropDownList(\backend\models\Brand::getBrand());
-echo $form->field($model,'market_price')->textInput()->label('市场价格');
-echo $form->field($model,'shop_price')->textInput()->label('商品价格');
-echo $form->field($model,'stock')->textInput();
-echo $form->field($model,'is_on_sale')->radioList(['1'=>'在售','0'=>'下架']);
-echo $form->field($model,'status')->radioList(['1'=>'正常','0'=>'回收站']);
-echo $form->field($model,'sort')->textInput()->label('排序');
-echo $form->field($model,'content')->widget('kucha\ueditor\UEditor',[]);
-echo \yii\bootstrap\Html::submitInput('提交');
-\yii\bootstrap\ActiveForm::end();
+    <table class="table table-bordered">
+        <tr>
+            <th>图片路径</th>
+        </tr>
+        <?php foreach ($model as $v):?>
+            <tr>
+                <td><?$v->path?></td>
+            </tr>
+        <?php endforeach;?>
+    </table>

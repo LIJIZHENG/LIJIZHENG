@@ -1,81 +1,117 @@
 <?php
 namespace backend\controllers;
 use backend\models\Goods;
+use backend\models\Goods_day_count;
+use backend\models\Goods_intro;
+use backend\models\GoodsCategory;
+use backend\models\Goodsdaycount;
+use backend\models\GoodsGallery;
 use GuzzleHttp\Psr7\UploadedFile;
 use yii\data\Pagination;
 use yii\helpers\Json;
 use yii\web\Controller;
+use yii\web\Request;
 use yii\web\Response;
 
 class GoodsController extends Controller{
+    public $enableCsrfValidation = false;
     public function actionIndex(){
         $query = Goods::find()->where(['!=','status','-1']);
         $pager = new Pagination();
         $pager->totalCount=$query->count();
         $pager->pageSize=1;
         $model=$query->limit($pager->limit)->offset($pager->offset)->all();
-        return $this->render('index',['model'=>$model,'pager'=>$pager]);
+//        $condition=[];
+        if(!empty($_POST['goods_category_id'])){
+            $condition[] = "goods_category_id = {$_POST['goods_category_id']}";
+        }
+        if(!empty($_POST['status'])){
+            $condition[]="(status & {$_POST['status']})>0";
+        }
+        if(!empty($_POST['is_on_sale'])){
+            $condition[]="is_on_sale={$_POST['is_on_sale']}-1";
+        }
+        if(!empty($_POST['keyword'])){
+            $condition[] = "(name like '%{$_POST['keyword']}%' or sn like '%{$_POST['keyword']}%')";
+        }
+//        var_dump($condition);die;
+        $_model = Goods::find()->where($condition)->all();
+        $category=GoodsCategory::find()->all();
+//        var_dump($_model);die;
+        return $this->render('index',['model'=>$model,'_model'=>$_model,'pager'=>$pager,'category'=>$category]);
     }
-    public function actionXian(){
-        $query = Goods::find()->where(['!=','status','-1']);
+    public function actionAddgoods(){
+        $query = GoodsGallery::find();
         $pager = new Pagination();
         $pager->totalCount=$query->count();
         $pager->pageSize=1;
         $model=$query->limit($pager->limit)->offset($pager->offset)->all();
-        return $this->render('xian',['model'=>$model,'pager'=>$pager]);
-    }
-    public function actionUpload()
-    {
-        if (\Yii::$app->request->isPost) {
-            $imgFile = UploadedFile::getInstanceByName('file');
-            //判断是否有文件上传
-            if ($imgFile) {
-                $fileName = '/upload/' . uniqid() . '.' . $imgFile->extension;
-                $imgFile->saveAs(\Yii::getAlias('@webroot') . $fileName, 0);
-                //=========将图片上传到七牛云============
-                $accessKey = "8lAynpHl_dE0OMQBBDh51AU5tDr_ohHeISv6ovQd";
-                $secretKey = "sUK1MSRAdnhG9CB9fWD250txwvN7ur_IDVmTTlwD";
-                //对象存储 空间名称
-                $bucket = "php0711";
-                $domain = '
-oyxs2huf5.bkt.clouddn.com';
-                $auth = new Goods_intro($accessKey, $secretKey);
-                $token = $auth->uploadToken($bucket);
-                $filePath = \Yii::getAlias('@webroot') . $fileName;
-                $key = $fileName;
-                $uploadMgr = new UploadManager();
-                list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
-                if ($err !== null) {
-                    return Json::encode(['error' => $err]);
-                } else {
-                    return Json::encode(['url' => 'http://' . $domain . '/' . $fileName]);
-                }
-            }
-        }
+        return $this->render('addgoods',['model'=>$model,'pager'=>$pager]);
     }
     public function actionAdd(){
-        $model = new Goods();
-//        var_dump($model);die;
-        //parent_id设置默认值
-        $model->goods_category_id = 0;
-        $request = \Yii::$app->request;
+        $model=new Goods();
+        $_model=new Goods_intro();
+        $day = date("Y-m-d",time());
+        $count=Goods_day_count::findOne(['day'=>$day]);
+//        var_dump($count);exit;
+        $request=new Request();
         if($request->isPost){
             $model->load($request->post());
             if($model->validate()){
-                if($model->goods_category_id == 0){
-                    $model->makeRoot();
-                    echo '添加根节点成功';
+//                var_dump(1);exit;
+                $day2 = date("Ymd",time());
+                if($day==0){
                 }else{
-                    $parent = Goods::findOne(['id'=>$model->goods_category_id]);
-                    $model->prependTo($parent);
-                    echo '添加子节点成功';
+                 $model->sn = str_pad($count->count+1,5,"0",STR_PAD_RIGHT);
+                 $day2.$model->sn;
                 }
+                $count->save(false);
+                $model->create_time = time();
+                $model->save(false);
+
+                $_model->content = $model->content;
+                $_model->save(false);
+                \Yii::$app->session->setFlash('success','添加成功');
+                return $this->redirect(['goods/index']);
+            }else{
+                var_dump($model->getErrors());
             }
+        }else{
+            return $this->render('add',['model'=>$model,'_model'=>$_model,'count'=>$count]);
         }
-        return $this->render('add',['model'=>$model]);
     }
-
-
+    public function actionDel(){
+        $id = \Yii::$app->request->post('id');
+        $brand = Goods::findOne(['id'=>$id]);
+        if($brand){
+            $brand->status=-1;
+            $brand->update();
+            return 'success';
+        }else{
+            return '该记录不存在或已被删除';
+        }
+    }
+    public function actionEdit($id){
+        $model=Goods::findOne(['id'=>$id]);
+        $_model=Goods_intro::findOne(['id'=>$id]);
+        $request=new Request();
+        if($request->isPost){
+            $model->load($request->post());
+//            $_model->load($request->post());
+            if($model->validate()){
+                $model->create_time = time();
+                $model->save(false);
+                $_model->content = $model->content;
+                $_model->save(false);
+                \Yii::$app->session->setFlash('success','修改成功');
+                return $this->redirect(['goods/index']);
+            }else{
+                var_dump($model->getErrors());
+            }
+        }else{
+            return $this->render('add',['model'=>$model,'_model'=>$_model]);
+        }
+    }
     //商品分类管理AJAX版
     public function actionAjax($filter){
         $this->enableCsrfValidation = false;
@@ -137,7 +173,6 @@ oyxs2huf5.bkt.clouddn.com';
                 break;
         }
     }
-
     public function actionZtree()
     {
         return $this->render('ztree');
