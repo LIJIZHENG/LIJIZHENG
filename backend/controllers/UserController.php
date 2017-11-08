@@ -93,4 +93,47 @@ class UserController extends Controller{
           ]
         ];
     }
+    //注销
+    public function actionLognt(){
+        \Yii::$app->user->logout();
+        return $this->redirect(['logo']);
+    }
+//    public function behaviors(){
+//        return [
+//          'acf'=>[//简单存取过滤器
+//              'class'=>AccessControl::className(),
+//           'only'=>['edit','add','login'],
+//              'rules'=>[
+//                'allow'=>true,//允许访问
+//                'actions'=>['edit','add'],
+//                  'roles'=>['@'],
+//                  ],
+//              [
+//                  'allow'=>true,
+//                  'actions'=>['login'],
+//                  'roles'=>['?'],
+//              ],
+//             [
+//                 'allow'=>true,
+//                 'actions'=>['login'],
+//                 'roles'=>['@'],
+//             ],
+//              [
+//                  'allow'=>true,
+//                  'actions'=>['del'],
+//                  'matchCallback'=>function(){
+//                     if (\Yii::$app->user->isGuest){
+//                         return false;
+//                     }else{
+//                         if (\Yii::$app->user->identity->username=='user'){
+//                             return true;
+//                         }else{
+//                             return false;
+//                         }
+//                     }
+//                  }
+//              ]
+//          ]
+//        ];
+//    }
 }
