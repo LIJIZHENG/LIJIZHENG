@@ -1,7 +1,9 @@
 <?php
 namespace backend\controllers;
 use backend\models\LoginForm;
+use backend\models\Passwrod;
 use backend\models\User;
+use frontend\models\PasswordForm;
 use yii\captcha\CaptchaAction;
 use yii\data\Pagination;
 use yii\web\Controller;
@@ -98,5 +100,44 @@ class UserController extends Controller{
         \Yii::$app->user->logout();
         return $this->redirect(['logo']);
     }
+    //修改密码
+    //修改密码
+    public function actionPassword(){
+        //echo 'pwd';
+        //1 显示修改密码表单
+        //1.1 实例化表单模型
+        $model = new Passwrod();
+
+        //2 接收表单数据,验证旧密码
+        $request = \Yii::$app->request;
+        if($request->isPost){
+            $model->load($request->post());
+            if($model->validate()){
+                //验证旧密码 新密码和确认新密码一致
+                $password_hash = \Yii::$app->user->identity->password_hash;
+                if(\Yii::$app->security->validatePassword($model->oldPassword_hash,$password_hash)){
+                    //旧密码正确//3 更新当前用户的密码
+                    /*$admin = \Yii::$app->user->identity;
+                    $admin->password = \Yii::$app->security->generatePasswordHash($model->newPassword);
+                    $admin->save(false);*/
+                    User::updateAll([
+                        'password_hash'=>\Yii::$app->security->generatePasswordHash($model->newPassword_hash)
+                    ],
+                        ['id'=>\Yii::$app->user->id]
+                    );
+                    \Yii::$app->user->logout();
+                    \Yii::$app->session->setFlash('success','密码修改成功,请重新登录');
+
+                    return $this->redirect(['user/login']);
+                }else{
+                    //旧密码不正确
+                    $model->addError('oldPassword_hash','旧密码不正确');
+                }
+            }
+        }
+        //1.2 调用视图
+        return $this->render('password',['model'=>$model]);
+    }
+
 
 }
