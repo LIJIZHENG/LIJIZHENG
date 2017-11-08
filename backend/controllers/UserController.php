@@ -1,9 +1,12 @@
 <?php
 namespace backend\controllers;
+use backend\models\LoginForm;
 use backend\models\User;
+use yii\captcha\CaptchaAction;
 use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\Request;
+use yii\filters\AccessControl;
 
 class UserController extends Controller{
     public function actionIndex(){
@@ -62,5 +65,32 @@ class UserController extends Controller{
         }else{
             return '该记录不存在或已被删除';
         }
+    }
+    public function actionLogin(){
+        //1.显示登录表单
+        //1.1 实例化表单模型
+        $model = new LoginForm();
+        $requesr=\Yii::$app->request;
+        if($requesr->isPost){
+            //表单提交,接收表单数据
+            $model->load($requesr->post());
+            if($model->validate()){
+                //认证//验证账号密码是否正确
+                if($model->login()){
+                    //提示信息 跳转
+                    \Yii::$app->session->setFlash('success','登录成功');
+                    //跳转
+                    return $this->redirect(['user/index']);
+                }
+            }
+        }
+        return $this->render('login',['model'=>$model]);
+    }
+    public function actions(){
+        return [
+          'captcha'=>[
+              'class'=>CaptchaAction::className()
+          ]
+        ];
     }
 }
