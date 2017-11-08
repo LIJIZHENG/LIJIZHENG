@@ -26,8 +26,8 @@
         <td><?=$v->status?></td>
         <td><?=$v->created_at?></td>
         <td><?=$v->updated_at?></td>
-        <td><?=$v->last_login_time?></td>
-        <td><?=$v->last_login_ip?></td>
+        <td><?=date('Y-m-d H:i:s',$v->last_login_time)?></td>
+        <td><?=long2ip($v->last_login_ip)?></td>
         <td>
             <a href="<?=\yii\helpers\Url::to(['user/edit','id'=>$v['id']])?>?>" class="btn btn-primary btn-xs">修改</a>
             <a href="javascript:;" class="btn-del btn btn-primary btn-xs" data-id="<?=$v['id']?>">删除</a>

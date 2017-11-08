@@ -37,7 +37,7 @@ class GoodsController extends Controller{
 //        $_model = Goods::find()->andwhere($condition)->all();
         $category=GoodsCategory::find()->all();
 //        var_dump($_model);die;
-        return $this->render('index',['model'=>$model,'_model'=>$_model,'pager'=>$pager,'category'=>$category]);
+        return $this->render('index',['model'=>$model,'pager'=>$pager,'category'=>$category]);
     }
     public function actionAddgoods(){
         $query = GoodsGallery::find();
@@ -67,7 +67,6 @@ class GoodsController extends Controller{
                 $count->save(false);
                 $model->create_time = time();
                 $model->save(false);
-
                 $_model->content = $model->content;
                 $_model->save(false);
                 \Yii::$app->session->setFlash('success','添加成功');

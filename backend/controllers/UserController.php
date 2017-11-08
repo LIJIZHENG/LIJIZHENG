@@ -23,7 +23,6 @@ class UserController extends Controller{
         if($request->isPost){
             $model->load($request->post());
             if($model->validate()){
-
                 $model->created_at=date("Ymd",time());
                 $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
                 $model->save(false);
@@ -71,6 +70,7 @@ class UserController extends Controller{
         //1.1 实例化表单模型
         $model = new LoginForm();
         $requesr=\Yii::$app->request;
+
         if($requesr->isPost){
             //表单提交,接收表单数据
             $model->load($requesr->post());
@@ -98,42 +98,5 @@ class UserController extends Controller{
         \Yii::$app->user->logout();
         return $this->redirect(['logo']);
     }
-//    public function behaviors(){
-//        return [
-//          'acf'=>[//简单存取过滤器
-//              'class'=>AccessControl::className(),
-//           'only'=>['edit','add','login'],
-//              'rules'=>[
-//                'allow'=>true,//允许访问
-//                'actions'=>['edit','add'],
-//                  'roles'=>['@'],
-//                  ],
-//              [
-//                  'allow'=>true,
-//                  'actions'=>['login'],
-//                  'roles'=>['?'],
-//              ],
-//             [
-//                 'allow'=>true,
-//                 'actions'=>['login'],
-//                 'roles'=>['@'],
-//             ],
-//              [
-//                  'allow'=>true,
-//                  'actions'=>['del'],
-//                  'matchCallback'=>function(){
-//                     if (\Yii::$app->user->isGuest){
-//                         return false;
-//                     }else{
-//                         if (\Yii::$app->user->identity->username=='user'){
-//                             return true;
-//                         }else{
-//                             return false;
-//                         }
-//                     }
-//                  }
-//              ]
-//          ]
-//        ];
-//    }
+
 }

@@ -23,7 +23,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
      */
     public function rules(){
         return [
-          [['username','password_hash','eamil','status'],'required']
+          [['username','password_hash','eamil','status'],'required'],
+
         ];
     }
     /**
@@ -83,7 +84,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
+       return $this->auth_key;
     }
     /**
      * Validates the given auth key.
@@ -95,6 +96,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
+        return $this->auth_key ===$authKey;
     }
 }
