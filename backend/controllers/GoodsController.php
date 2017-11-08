@@ -4,7 +4,6 @@ use backend\models\Goods;
 use backend\models\Goods_day_count;
 use backend\models\Goods_intro;
 use backend\models\GoodsCategory;
-use backend\models\Goodsdaycount;
 use backend\models\GoodsGallery;
 use GuzzleHttp\Psr7\UploadedFile;
 use yii\data\Pagination;
@@ -21,7 +20,7 @@ class GoodsController extends Controller{
         $pager->totalCount=$query->count();
         $pager->pageSize=1;
         $model=$query->limit($pager->limit)->offset($pager->offset)->all();
-//        $condition=[];
+        $condition=[];
         if(!empty($_POST['goods_category_id'])){
             $condition[] = "goods_category_id = {$_POST['goods_category_id']}";
         }
@@ -35,7 +34,7 @@ class GoodsController extends Controller{
             $condition[] = "(name like '%{$_POST['keyword']}%' or sn like '%{$_POST['keyword']}%')";
         }
 //        var_dump($condition);die;
-        $_model = Goods::find()->where($condition)->all();
+//        $_model = Goods::find()->andwhere($condition)->all();
         $category=GoodsCategory::find()->all();
 //        var_dump($_model);die;
         return $this->render('index',['model'=>$model,'_model'=>$_model,'pager'=>$pager,'category'=>$category]);
