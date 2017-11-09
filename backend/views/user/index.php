@@ -5,13 +5,11 @@
     <tr>
         <th>ID</th>
         <th>用户名</th>
-        <th>auth_key</th>
-        <th>哈希密码</th>
-        <th>password_reset_token</th>
+<!--        <th>哈希密码</th>-->
         <th>邮箱</th>
         <th>状态</th>
         <th>创建时间</th>
-        <th>更新日期</th>
+<!--        <th>更新日期</th>-->
         <th>最后登录时间</th>
         <th>最后登陆ip字段</th>
         <th>操作</th>
@@ -19,13 +17,9 @@
     <?php foreach ($model as $v):?>
         <td><?=$v->id?></td>
         <td><?=$v->username?></td>
-        <td><?=$v->auth_key?></td>
-        <td><?=$v->password_hash?></td>
-        <td><?=$v->password_reset_token?></td>
         <td><?=$v->email?></td>
         <td><?=$v->status?></td>
         <td><?=$v->created_at?></td>
-        <td><?=$v->updated_at?></td>
         <td><?=date('Y-m-d H:i:s',$v->last_login_time)?></td>
         <td><?=long2ip($v->last_login_ip)?></td>
         <td>

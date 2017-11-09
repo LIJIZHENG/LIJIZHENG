@@ -53,7 +53,7 @@ class UserController extends Controller{
                 var_dump($model->getErrors());
             }
         }else{
-            return $this->render('add',['model'=>$model]);
+            return $this->render('edit',['model'=>$model]);
         }
     }
     public function actionDel(){

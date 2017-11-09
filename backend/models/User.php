@@ -23,7 +23,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
      */
     public function rules(){
         return [
-          [['username','password_hash','eamil','status'],'required'],
+//            [['username'],'unique'],
+          [['username','password_hash','email','status'],'required'],
 
         ];
     }
@@ -33,7 +34,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
     public function attributeLabels(){
         return [
            'username'=>'用户名',
-            'password_hash'=>'哈希密码',
+            'password_hash'=>'密码',
             'email'=>'邮箱',
             'status'=>'状态',
         ];
