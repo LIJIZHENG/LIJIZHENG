@@ -11,7 +11,7 @@ $this->registerJsFile(Yii::getAlias('@web').'/datatables/datatables.min.js',[
 <table id="table_id_example" class="display">
     <thead>
     <tr>
-        <th><a href="/index.php?r=role/add-role" class="btn-primary">添加</a></th>
+        <th><a href="/index.php?r=role/add-role" class="btn btn-primary">添加</a></th>
         <th>Column 2</th>
     </tr>
     <thead>
@@ -26,8 +26,8 @@ $this->registerJsFile(Yii::getAlias('@web').'/datatables/datatables.min.js',[
     <td><?=$v->name?></td>
     <td><?=$v->description?></td>
     <td>
-        <a href="<?=\yii\helpers\Url::to(['role/edit','name'=>$v->name])?>" class="btn-primary">修改</a>
-        <a href="<?=\yii\helpers\Url::to(['role/del','name'=>$v->name])?>" class="btn-primary">删除</a>
+        <a href="<?=\yii\helpers\Url::to(['role/del','name'=>$v->name])?>" class="btn btn-danger">删除</a>
+        <a href="<?=\yii\helpers\Url::to(['role/edit-role','name'=>$v->name])?>" class=" btn btn-primary">修改</a>
     </td>
 </tr>
     <?php endforeach;?>

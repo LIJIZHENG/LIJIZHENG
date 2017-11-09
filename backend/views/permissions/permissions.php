@@ -26,7 +26,7 @@ $this->registerJsFile(Yii::getAlias('@web').'/datatables/datatables.min.js',[
         <td><?=$v->name?></td>
         <td><?=$v->description?></td>
         <td>
-            <a href="<?=\yii\helpers\Url::to(['permissions/del','name'=>$v->name])?>" class="btn btn-primary btn-xs">删除</a>
+            <a href="<?=\yii\helpers\Url::to(['permissions/del','name'=>$v->name])?>" class="btn btn-danger btn-xs">删除</a>
             <a href="<?=\yii\helpers\Url::to(['permissions/edit-permissions','name'=>$v->name])?>" class="btn btn-primary btn-xs">修改</a>
         </td>
     </tr>

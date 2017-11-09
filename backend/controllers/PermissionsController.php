@@ -29,27 +29,27 @@ class PermissionsController extends Controller{
         }
     }
     public function actionEditPermissions($name){
-        $auth = \Yii::$app->authManager;
-        $model = new Permissions;
-        $permission=\Yii::$app->authManager->getPermission($name);
-        $model->name=$permission->name;
-        $model->description=$permission->description;
-        $request = \Yii::$app->request;
-        if($request->isPost){
-            $model->load($request->post());
-            if($model->validate()){
-                $permisson =$auth->createPermission($model->name);
-                $permisson->description=$model->description;
-                $auth->update($name,$permisson);
-                \Yii::$app->session->setFlash('success','修改成功');
-                return $this->redirect(['permissions/permissions']);
-            }else{
-                var_dump($auth->getErrors());
-            }
+    $auth = \Yii::$app->authManager;
+    $model = new Permissions;
+    $permission=\Yii::$app->authManager->getPermission($name);
+    $model->name=$permission->name;
+    $model->description=$permission->description;
+    $request = \Yii::$app->request;
+    if($request->isPost){
+        $model->load($request->post());
+        if($model->validate()){
+            $permisson =$auth->createPermission($model->name);
+            $permisson->description=$model->description;
+            $auth->update($name,$permisson);
+            \Yii::$app->session->setFlash('success','修改成功');
+            return $this->redirect(['permissions/permissions']);
         }else{
-            return $this->render('editpermissions',['model'=>$model]);
+            var_dump($auth->getErrors());
         }
+    }else{
+        return $this->render('editpermissions',['model'=>$model]);
     }
+}
     public function actionDel($name){
         $permission = \Yii::$app->authManager->getPermission( $name );
 

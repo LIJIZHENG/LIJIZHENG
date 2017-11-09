@@ -36,19 +36,19 @@ class RoleController extends Controller {
     public function actionEditRole($name){
         $auth = \Yii::$app->authManager;
         $model = new Role();
-        $role=\Yii::$app->authManager->getPermission($name);
+        $role=\Yii::$app->authManager->getRole($name);
         $model->name=$role->name;
         $model->description=$role->description;
+        $model->permissions=array_keys($auth->getPermissionsByRole($name));
         $request = \Yii::$app->request;
         if($request->isPost){
             $model->load($request->post());
             if($model->validate()){
                 //创建角色
-                $role = $auth->createRole($model->name);
+                $role->name=$model->name;
                 $role->description = $model->description;
-                $auth->remove($role);
                 $auth->update($name,$role);//角色添加到数据表
-                    \Yii::$app->session->setFlash('success','修改成功');
+                $auth->removeChildren($role);
                 foreach ($model->permissions as $permissionName){
                     $permission = $auth->getPermission($permissionName);//根据权限的名称获取权限对象
                     //给角色分配权限
@@ -60,8 +60,9 @@ class RoleController extends Controller {
         $permissions = $auth->getPermissions();
         //var_dump($permissions);exit;
         $permissions = ArrayHelper::map($permissions,'name','description');
-        return $this->render('edit-role',['model'=>$model,'permissions'=>$permissions]);
+        return $this->render('add-role',['model'=>$model,'permissions'=>$permissions]);
     }
+
 
     public function actionDel($name){
         $role = \Yii::$app->authManager->getRole($name);
