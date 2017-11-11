@@ -2,10 +2,12 @@
 namespace backend\controllers;
 use backend\models\LoginForm;
 use backend\models\Passwrod;
+use backend\models\Role;
 use backend\models\User;
 use frontend\models\PasswordForm;
 use yii\captcha\CaptchaAction;
 use yii\data\Pagination;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Request;
 use yii\filters\AccessControl;
@@ -20,13 +22,20 @@ class UserController extends Controller{
         return $this->render('index',['model'=>$model,'pager'=>$pager]);
     }
     public function actionAdd(){
+        $auth = \Yii::$app->authManager;
         $model = new User();
-        $request=new Request();
+        $request=\Yii::$app->request;
         if($request->isPost){
             $model->load($request->post());
             if($model->validate()){
                 $model->created_at=date("Ymd",time());
                 $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
+//                //创建角色
+//                $role=$auth->createRole($model->username);
+//                $auth->add($role);//角色添加导数据表
+//                foreach ($model->role as $role){
+//                    $role = $auth->getRole();//根据用户名的名称获取权限对象
+//                }
                 $model->save(false);
                 \Yii::$app->session->setFlash('success','添加成功');
                 return $this->redirect(['user/index']);
@@ -34,26 +43,37 @@ class UserController extends Controller{
                 var_dump($model->getErrors());
             }
         }else{
-            return $this->render('add',['model'=>$model]);
+            $role = $auth->getRoles();
+            //var_dump($permissions);exit;
+            $role = ArrayHelper::map($role,'name','description');
+            return $this->render('add',['model'=>$model,'role'=>$role]);
         }
     }
     public function actionEdit($id){
+        $auth = \Yii::$app->authManager;
         $model =User::findOne(['id'=>$id]);
-        $request=new Request();
+//        $role=\Yii::$app->authManager->getRole();
+        $role = $auth->getAssignments($id);
+        $model->role=array_keys($role);
+        $request= \Yii::$app->request;
         if($request->isPost){
             $model->load($request->post());
             if($model->validate()){
-
                 $model->created_at=date("Ymd",time());
                 $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
                 $model->save(false);
+                $auth->revokeAll($id);
+                foreach ($model->role as $roleName){
+                    $role=$auth->getRole($roleName);
+                    $auth->assign($role,$model->getOldAttribute('id'));
+                }
                 \Yii::$app->session->setFlash('success','修改成功');
                 return $this->redirect(['user/index']);
             }else{
                 var_dump($model->getErrors());
             }
         }else{
-            return $this->render('edit',['model'=>$model]);
+            return $this->render('edit',['model'=>$model,'role'=>$role]);
         }
     }
     public function actionDel(){

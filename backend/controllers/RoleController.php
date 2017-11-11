@@ -62,8 +62,6 @@ class RoleController extends Controller {
         $permissions = ArrayHelper::map($permissions,'name','description');
         return $this->render('add-role',['model'=>$model,'permissions'=>$permissions]);
     }
-
-
     public function actionDel($name){
         $role = \Yii::$app->authManager->getRole($name);
 //           var_dump($name);die;

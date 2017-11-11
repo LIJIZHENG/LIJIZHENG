@@ -7,37 +7,33 @@ $this->registerJsFile(Yii::getAlias('@web').'/datatables/datatables.min.js',[
     'depends'=>\yii\web\JqueryAsset::className()
 ]);
 ?>
-
+<a href="/index.php?r=role/add-role" class="btn btn-primary">添加</a>
 <table id="table_id_example" class="display">
-    <thead>
-    <tr>
-        <th><a href="/index.php?r=role/add-role" class="btn btn-primary">添加</a></th>
-        <th>Column 2</th>
-    </tr>
-    <thead>
-    <tbody>
+<thead>
     <tr>
         <th>角色名</th>
         <th>描述</th>
         <th>操作</th>
     </tr>
-    <?php foreach ($model as $v):?>
-<tr>
-    <td><?=$v->name?></td>
-    <td><?=$v->description?></td>
-    <td>
+</thead>
+<tbody>
+<?php foreach ($model as $v):?>
+    <tr>
+        <td><?=$v->name?></td>
+        <td><?=$v->description?></td>
+        <td>
         <a href="<?=\yii\helpers\Url::to(['role/del','name'=>$v->name])?>" class="btn btn-danger">删除</a>
         <a href="<?=\yii\helpers\Url::to(['role/edit-role','name'=>$v->name])?>" class=" btn btn-primary">修改</a>
-    </td>
-</tr>
-    <?php endforeach;?>
-    </tbody>
+        </td>
+    </tr>
+<?php endforeach;?>
+</tbody>
 </table>
 <?php
 $this->registerJs(
-    <<<JS
+<<<JS
 $(document).ready( function () {
-    $('#table_id_example').DataTable();
+$('#table_id_example').DataTable();
 } );
 JS
 );

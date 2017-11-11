@@ -8,7 +8,7 @@ use yii\data\Pagination;
 class GoodsCategoryController extends \yii\web\Controller
 {
     public function actionIndex(){
-        $query = GoodsCategory::find()->where(['!=','status','-1']);
+        $query = GoodsCategory::find();
         $pager = new Pagination();
         $pager->totalCount=$query->count();
         $pager->pageSize=5;

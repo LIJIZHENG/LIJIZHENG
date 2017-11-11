@@ -19,5 +19,4 @@ class Article extends ActiveRecord{
          [['sort'],'integer'],
      ];
  }
-
 }
