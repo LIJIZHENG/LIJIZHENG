@@ -7,7 +7,7 @@ $this->registerJsFile(Yii::getAlias('@web').'/datatables/datatables.min.js',[
     'depends'=>\yii\web\JqueryAsset::className()
 ]);
 ?>
-<a href="/index.php?r=role/add-role" class="btn btn-primary">添加</a>
+<a href="/role/add-role" class="btn btn-primary">添加</a>
 <table id="table_id_example" class="display">
 <thead>
     <tr>

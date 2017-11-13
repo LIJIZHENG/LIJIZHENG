@@ -1,7 +1,7 @@
 <?php
 ?>
-<a href="/index.php?r=article/xian" class="glyphicon glyphicon-trash"> 回收站</a>
-<a href="/index.php?r=article/add" class="btn btn-group btn-xs">添加</a>
+<a href="/article/xian" class="glyphicon glyphicon-trash"> 回收站</a>
+<a href="/article/add" class="btn btn-danger btn-xs">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -23,8 +23,8 @@
             <td><?=$v['status']?></td>
             <td><?=date('Y:m:d H:m:s',$v['create_time'])?></td>
             <td>
-                <a href="<?=\yii\helpers\Url::to(['article/edit','id'=>$v['id']])?>" class="btn btn-group btn-xs">修改</a>
-                <a href="javascript:;" class="btn-del btn btn-primary" data-id="<?=$v['id']?>">删除</a>
+                <a href="<?=\yii\helpers\Url::to(['article/edit','id'=>$v['id']])?>" class="btn btn-danger btn-xs">修改</a>
+                <a href="javascript:;" class="btn-del btn btn-primary btn-xs" data-id="<?=$v['id']?>">删除</a>
             </td>
         </tr>
     <?php endforeach;?>

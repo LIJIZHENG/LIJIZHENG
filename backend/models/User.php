@@ -43,32 +43,25 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
         ];
     }
     //获取用户对应的菜单
-    //获取用户对应的菜单
     public function getMenus(){
-        /*$menuItems = [
-            ['label'=>'下拉菜单','items'=>[
-                ['label'=>'添加分类','url'=>['goods/add-category']],
-                ['label'=>'分类列表','url'=>['goods/ztree']],
-            ]],
-        ];*/
         $menuItems = [];
         //获取所有一级菜单
         $menus = Menu::find()->where(['parent_id'=>0])->all();
-        foreach ($menus as $menu){
+//        var_dump($menus);exit;
+        foreach ($menus as $v) {
 
             $items = [];
             //遍历该一级菜单的子菜单
-            foreach ($menu->children as $child){
+            foreach ($v->children as $child) {
                 //根据用户权限来确定是否显示该菜单
-                if(Yii::$app->user->can($child->url)){
-                    $items[] =  ['label'=>$child->label,'url'=>[$child->url]];
-                }
+//                if(Yii::$app->user->can($child->url)){
+                $items[] = ['label' => $child->label, 'url' => [$child->url]];
             }
-
+//        }
             //$items[] =  ['label'=>'分类列表','url'=>['goods/ztree']];
 
 
-            $menuItem = ['label'=>$menu->label,'items'=>$items];
+            $menuItem = ['label'=>$v->label,'items'=>$items];
             //将该组菜单放入菜单组里面
             //如果没有二级菜单,则不显示一级菜单
             if($items){
@@ -76,7 +69,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface{
 
             }
         }
-
+//        var_dump($menuItems);exit;
         return $menuItems;
     }
     /**

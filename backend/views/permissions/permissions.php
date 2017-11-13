@@ -8,7 +8,7 @@ $this->registerJsFile(Yii::getAlias('@web').'/datatables/datatables.min.js',[
 ]);
 
 ?>
-    <a href="/index.php?r=permissions/add-permissions" class="btn btn-primary btn-xs">添加</a>
+    <a href="/permissions/add-permissions" class="btn btn-primary btn-xs">添加</a>
     <table id="table_id_example" class="display">
     <thead>
     <tr>

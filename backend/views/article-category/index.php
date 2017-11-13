@@ -1,7 +1,7 @@
 <?php
 ?>
-    <a href="/index.php?r=article-category/xian" class="glyphicon glyphicon-trash"> 回收站</a>
-<a href="/index.php?r=article-category/add" class="btn-primary btn-xs">添加</a>
+    <a href="/article-category/xian" class="glyphicon glyphicon-trash"> 回收站</a>
+<a href="/article-category/add" class="btn-primary btn-xs">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>

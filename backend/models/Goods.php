@@ -53,7 +53,7 @@ class Goods extends ActiveRecord{
             'day'=>'日期',
             'status' => '状态(1正常0回收站)',
             'view_times'=>'浏览次数',
-            'goods_category_id'=>'商品分类id'
+            'goods_category_id'=>'商品分类id',
         ];
     }
 }

@@ -61,10 +61,10 @@ class GoodsController extends Controller{
                 $day2 = date("Ymd",time());
                 if($day==0){
                 }else{
-                 $model->sn = str_pad($count->count+1,5,"0",STR_PAD_RIGHT);
-                 $day2.$model->sn;
+                 $model->sn = str_pad($count['count']+1,5,"0",STR_PAD_RIGHT);
+//                 $day2.$model->sn;
                 }
-                $count->save(false);
+//                $count->save(false);
                 $model->create_time = time();
                 $model->save(false);
                 $_model->content = $model->content;

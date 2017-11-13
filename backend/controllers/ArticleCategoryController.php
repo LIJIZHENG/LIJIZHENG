@@ -7,7 +7,7 @@ use yii\web\Controller;
 use yii\web\Request;
 use yii\web\UploadedFile;
 
-class ArticleCategoryController extends Controller{
+class ArticleCategoryController extends  Controller{
     public function actionIndex(){
         $query = ArticleCategory::find()->where(['!=','status','-1']);
         $pager = new Pagination();

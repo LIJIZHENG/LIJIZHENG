@@ -12,7 +12,7 @@ use yii\web\Controller;
 use yii\web\Request;
 use yii\filters\AccessControl;
 
-class UserController extends Controller{
+class UserController extends Controller {
     public function actionIndex(){
         $query = User::find()->where(['!=','status','-1']);
         $pager = new Pagination();
@@ -21,60 +21,81 @@ class UserController extends Controller{
         $model=$query->limit($pager->limit)->offset($pager->offset)->all();
         return $this->render('index',['model'=>$model,'pager'=>$pager]);
     }
+    //添加用户
     public function actionAdd(){
-        $auth = \Yii::$app->authManager;
+        $auth = \yii::$app->authManager;
         $model = new User();
-        $request=\Yii::$app->request;
-        if($request->isPost){
+        //设置场景 , 当前场景是SCENARIO_Add场景
+//        $model->scenario = User::SCENARIO_Add;
+
+        $request = new Request();
+        if ($request->isPost) {
+            //接受数据
             $model->load($request->post());
-            if($model->validate()){
-                $model->created_at=date("Ymd",time());
-                $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
-//                //创建角色
-//                $role=$auth->createRole($model->username);
-//                $auth->add($role);//角色添加导数据表
-//                foreach ($model->role as $role){
-//                    $role = $auth->getRole();//根据用户名的名称获取权限对象
-//                }
-                $model->save(false);
-                \Yii::$app->session->setFlash('success','添加成功');
+            if ($model->validate()) {
+
+                //使用yii 安全组件来(加密密码)生成密码的密文
+                $model->password_hash= \Yii::$app->security->generatePasswordHash($model->password_hash);
+                $model->auth_key = \Yii::$app->security->generateRandomString();//随机字符串
+                $model->save(false);//保存数据
+
+                //分配角色
+                if ($model->role){
+                    foreach($model->role as $roleName){
+                        $role = $auth->getRole($roleName);
+                        $auth->assign($role,$model->id);
+                    }
+                }
+
+                \Yii::$app->session->setFlash('success', '添加成功');
                 return $this->redirect(['user/index']);
-            }else{
-                var_dump($model->getErrors());
             }
-        }else{
-            $role = $auth->getRoles();
-            //var_dump($permissions);exit;
-            $role = ArrayHelper::map($role,'name','description');
-            return $this->render('add',['model'=>$model,'role'=>$role]);
         }
+        //展示表单页面
+        $role = $auth->getRoles();
+        $role = ArrayHelper::map($role,'name','name');
+
+
+        return $this->render('add',['model'=>$model,'role'=>$role]);
     }
     public function actionEdit($id){
-        $auth = \Yii::$app->authManager;
-        $model =User::findOne(['id'=>$id]);
-//        $role=\Yii::$app->authManager->getRole();
-        $role = $auth->getAssignments($id);
-        $model->role=array_keys($role);
-        $request= \Yii::$app->request;
-        if($request->isPost){
-            $model->load($request->post());
-            if($model->validate()){
-                $model->created_at=date("Ymd",time());
-                $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
-                $model->save(false);
-                $auth->revokeAll($id);
-                foreach ($model->role as $roleName){
-                    $role=$auth->getRole($roleName);
-                    $auth->assign($role,$model->getOldAttribute('id'));
-                }
-                \Yii::$app->session->setFlash('success','修改成功');
-                return $this->redirect(['user/index']);
-            }else{
-                var_dump($model->getErrors());
+        $auth = \yii::$app->authManager;
+        $model=User::findOne(['id'=>$id]);
+        $model->role = $auth->getRolesByUser($id);
+        $request = new Request();
+        //回显多选遍历为数组赋值给permissionsid
+        if ($auth->getRolesByUser($id)){
+            $pers = $auth->getRolesByUser($id);
+            foreach ($pers as $v){
+                $per[] = $v->name;
             }
-        }else{
-            return $this->render('edit',['model'=>$model,'role'=>$role]);
+            $model->role = $per;
         }
+        if ($request->isPost) {
+            //接受数据
+            $model->load($request->post());
+            if ($model->validate()) {
+
+                //使用yii 安全组件来(加密密码)生成密码的密文
+                // $model->password_hash= \Yii::$app->security->generatePasswordHash($model->password);
+                $model->save();//保存数据
+                //删掉原来的角色
+                $auth->revokeAll($id);
+                //重新分配角色
+                if ($model->role){
+                    foreach($model->role as $roleName){
+                        $role = $auth->getRole($roleName);
+                        $auth->assign($role,$id);
+                    }
+                }
+
+                \Yii::$app->session->setFlash('success', '修改成功');
+                return $this->redirect(['user/index']);
+            }
+        }
+        $role = $auth->getRoles();
+        $role = ArrayHelper::map($role,'name','name');
+        return $this->render('edit',['model'=>$model,'role'=>$role]);
     }
     public function actionDel(){
         $id = \Yii::$app->request->post('id');
@@ -158,6 +179,4 @@ class UserController extends Controller{
         //1.2 调用视图
         return $this->render('password',['model'=>$model]);
     }
-
-
 }

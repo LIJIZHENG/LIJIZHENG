@@ -1,6 +1,6 @@
 <?php
 ?>
-<a href="/index.php?r=menu/add-menu" class="btn btn-danger btn-xs">添加</a>
+<a href="/menu/add-menu" class="btn btn-danger btn-xs">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>

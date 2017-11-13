@@ -13,7 +13,6 @@ class CommonController extends Controller
         if (!parent::beforeAction($action)) {
             return false;
         }
-
         $controller = \Yii::$app->controller->id;
         $action = \Yii::$app->controller->action->id;
         $permissionName = $controller.'/'.$action;

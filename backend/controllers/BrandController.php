@@ -46,10 +46,10 @@ class BrandController extends Controller{
             $brand->load($request->post());
             $brand->imgFile=UploadedFile::getInstance($brand,'imgFile');
             if($brand->validate()){
-                $ext = $brand->imgFile->extension;
-                $file='/upload/'.uniqid().'.'.$ext;
-                $brand->imgFile->saveAs(\Yii::getAlias('@webroot').$file);
-                $brand->logo=$file;
+//                $ext = $brand->imgFile->extension;
+//                $file='/upload/'.uniqid().'.'.$ext;
+//                $brand->imgFile->saveAs(\Yii::getAlias('@webroot').$file);
+//                $brand->logo=$file;
                 $brand->save(false);
                 \Yii::$app->session->setFlash('success','修改成功');
                 return $this->redirect(['brand/index']);

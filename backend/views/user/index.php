@@ -1,6 +1,6 @@
 <?php
 ?>
-    <a href="/index.php?r=user/add" class="btn btn-primary btn-xs">添加</a>
+    <a href="/user/add" class="btn btn-primary btn-xs">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -23,7 +23,7 @@
         <td><?=date('Y-m-d H:i:s',$v->last_login_time)?></td>
         <td><?=long2ip($v->last_login_ip)?></td>
         <td>
-            <a href="<?=\yii\helpers\Url::to(['user/edit','id'=>$v['id']])?>?>" class="btn btn-primary btn-xs">修改</a>
+            <a href="<?=\yii\helpers\Url::to(['user/edit','id'=>$v['id']])?>" class="btn btn-primary btn-xs">修改</a>
             <a href="javascript:;" class="btn-del btn btn-primary btn-xs" data-id="<?=$v['id']?>">删除</a>
         </td>
     <?php endforeach;?>

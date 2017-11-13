@@ -18,14 +18,14 @@ class GoodsCategoryController extends \yii\web\Controller
     public function actionDel(){
         $id = \Yii::$app->request->post('id');
         $model = GoodsCategory::findOne(['id'=>$id]);
-            if($model){
-                $model->delete();
-                return 'success';
-            }else{
-                return '该记录不存在或已被删除';
-            }
-
+        if($model){
+            $model->status=-1;
+            $model->update();
+            return 'success';
+        }else{
+            return '该记录不存在或已被删除';
         }
+    }
     //添加商品分类
     public function actionAdd(){
         $model = new GoodsCategory();
@@ -42,7 +42,7 @@ class GoodsCategoryController extends \yii\web\Controller
                     $parent = GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($parent);
                     \Yii::$app->session->setFlash('success', '添加成功');
-                    return $this->redirect('index.php?r=goods-category/index');
+                    return $this->redirect(['/goods-category/index']);
                 }
             }
         }
@@ -69,7 +69,7 @@ class GoodsCategoryController extends \yii\web\Controller
                     $parent = GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($parent);
                     \Yii::$app->session->setFlash('success', '修改');
-                    return $this->redirect('index.php?r=goods-category/index');
+                    return $this->redirect(['goods-category/index']);
                 }
             }
         }

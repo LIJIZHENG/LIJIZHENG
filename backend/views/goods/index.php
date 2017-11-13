@@ -26,7 +26,7 @@
         <input type="submit" value=" 搜索 " class="button" />
 </div>
 </form>
-<a href="/index.php?r=goods/add" class="btn btn-primary btn-xs">添加</a>
+<a href="/goods/add" class="btn btn-primary btn-xs">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -62,9 +62,9 @@
         <td><?=date('Y:m:d H:m:s',$v->create_time)?></td>
         <td><?=$v->view_times?></td>
         <td>
-            <a href="javascript:;" class="btn-del btn btn-primary" data-id="<?=$v['id']?>">删除</a>
-            <a href="/index.php?r=goods/addgoods" class="btn btn-primary btn-xs">相册</a>
-            <a href="<?=\yii\helpers\Url::to(['goods/edit','id'=>$v['id']])?>" class="btn btn-primary btn-xs">编辑</a>
+            <a href="javascript:;" class="btn-del btn btn-danger btn-xs" data-id="<?=$v['id']?>">删除</a>
+            <a href="/goods/addgoods" class="btn btn-primary btn-xs">相册</a>
+            <a href="<?=\yii\helpers\Url::to(['goods/edit','id'=>$v['id']])?>" class="btn btn-danger btn-xs">编辑</a>
         </td>
     </tr>
 <?php endforeach;?>

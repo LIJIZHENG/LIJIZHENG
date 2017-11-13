@@ -94,12 +94,11 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
     //测试菜单关系
     public function actionTest(){
-        $menu = Menu::findOne(['id'=>27]);
+        $menu = Menu::findOne(['id'=>44]);
         var_dump($menu->children);
     }
     //测试模拟登录

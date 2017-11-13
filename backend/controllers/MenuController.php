@@ -2,6 +2,7 @@
 namespace backend\controllers;
 use backend\models\Menu;
 use yii\data\Pagination;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Request;
 use yii\web\Response;
@@ -58,4 +59,39 @@ public function actionDel(){
         return '该记录不存在或已被删除';
     }
 }
+//过滤器
+//public function behaviors()
+//{
+//    return [
+//        'acf'=>[//简单过滤器 简单权限控制
+//            'class'=>AccessControl::className(),
+//            'only'=>['indenx-menu','add-menu','edit-menu'],
+//            'rules'=>[
+//                [//允许登录才可以访问
+//                  'allow'=>true,//允许访问
+//                  'actions'=>['add-menu','edit-menu'],//操作
+//                 'roles'=>['@'],//角色 ?未登录 @已登录
+//                ],
+//                [
+//                    //允许未登录用户访问index-menu
+//                    'allow'=>true,
+//                    'actions'=>['index-menu'],
+//                    'roles'=>['?']
+//                ],
+//                [
+//                    'allow'=>true,
+//                    'actions'=>['index-menu'],
+//                    'roles'=>['@'],
+//                ],
+//                [
+//                    'allow'=>true,
+//                    'actions'=>['del'],
+//                    'matchCallback'=>function(){
+//
+//                    }
+//                ]
+//            ]
+//        ]
+//    ];
+//}
 }
