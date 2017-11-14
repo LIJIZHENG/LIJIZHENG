@@ -7,20 +7,17 @@ use yii\db\ActiveRecord;
 class LoginForm extends Model {
 public $username;
 public $password_hash;
-//public $code;//验证码
 public $rememberMe;
 public function rules(){
     return [
       [['username','password_hash'],'required'],
-//     //验证码
-//      ['code','captcha','captchaAction'=>'user/captcha'],
         [['rememberMe'],'safe']
         ];
 }
 public function attributeLabels(){
     return [
         'username'=>'用户名',
-        'password_hash'=>'哈希密码',
+        'password_hash'=>'密码',
         'rememberMe'=>'记住我',
     ];
 }

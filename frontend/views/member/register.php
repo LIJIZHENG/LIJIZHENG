@@ -35,7 +35,7 @@
 <!-- 页面头部 start -->
 <div class="header w990 bc mt15">
     <div class="logo w990">
-        <h2 class="fl"><a href="#"><img src="/images/logo.png" alt="京西商城"></a></h2>
+        <h2 class="fl"><a href="index.html"><img src="/images/logo.png" alt="京西商城"></a></h2>
     </div>
 </div>
 <!-- 页面头部 end -->
@@ -48,7 +48,7 @@
     </div>
     <div class="login_bd">
         <div class="login_form fl">
-            <form action="" method="post">
+            <form action="" method="post" id="biaodan">
                 <ul>
                     <li>
                         <label for="">用户名：</label>
@@ -74,23 +74,18 @@
                         <label for="">手机号码：</label>
                         <input type="text" class="txt" value="" name="tel" id="tel" placeholder=""/>
                     </li>
-<!--                    <li>-->
-<!--                        <label for="">验证码：</label>-->
-<!--                        <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="captcha" disabled="disabled" id="captcha"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>-->
-<!---->
-<!--                    </li>-->
+                    <li>
+                        <label for="">验证码：</label>
+                        <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="captcha" disabled="disabled" id="captcha"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
+
+                    </li>
 <!--                    <li class="checkcode">-->
 <!--                        <label for="">验证码：</label>-->
 <!--                        <input type="text"  name="checkcode" />-->
 <!--                        <img src="/images/checkcode1.jpg" alt="" />-->
 <!--                        <span>看不清？<a href="">换一张</a></span>-->
 <!--                    </li>-->
-<!--                    </li>-->
-                    <li>
-                        <label for="">状态：</label>
-                        <input type="radio" name="status" value="1" checked> 正常
-                        <input type="radio" name="status" value="0"> 删除
-                    </li>
+
                     <li>
                         <label for="">&nbsp;</label>
                         <input type="checkbox" class="chb" checked="checked" /> 我已阅读并同意《用户注册协议》
@@ -101,6 +96,7 @@
                     </li>
                 </ul>
             </form>
+
 
         </div>
 
@@ -141,12 +137,73 @@
     </p>
 </div>
 <!-- 底部版权 end -->
-<script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
-<script type="text/javascript">
+<!--        <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>-->
+<!--        <script type="text/javascript">-->
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+<script>
+            $().ready(function() {
+// 在键盘按下并释放及提交后验证提交表单
+                $("#biaodan").validate({
+                    rules: {
+                        username: {
+                            required: true,
+                            minlength: 2
+                        },
+                        password_hash: {
+                            required: true,
+                            minlength: 5
+                        },
+                        email: {
+                            required: true,
+                            email: true
+                        },
+                        tel: {
+                            required: "#newsletter:checked",
+                            minlength: 2
+                        }
+                    },
+                    messages: {
+                        username: {
+                            required: "请输入用户名",
+                            minlength: "用户名必需由两个字母组成"
+                        },
+                        password_hash: {
+                            required: "请输入密码",
+                            minlength: "密码长度不能小于 5 个字母"
+                        },
+                        email: "请输入一个正确的邮箱",
+                    }
+                    remote: {
+                        url: "check-tel.php",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            username: function() {
+                                return $("#tel").val();
+                            }
+                        }
+                    }
+                })
+
+            });
+    //2短信验证码验证:    //用异步验证(远程验证)和验证用户名唯一
+
     function bindPhoneNum(){
+        //1点击发送短信验证码按钮,获取手机号码,通过AJAX请求发送短信
+        var phone = $("#tel").val();
+        //手机号码判断
+        $.get("<?=\yii\helpers\Url::to(['member/ajax-sms'])?>",{phone:phone},function(data){
+            if(data == 'success'){
+                alert('短信发送成功');
+            }else{
+                //发送失败
+                alert('短信发送失败,请稍后再试.');
+            }
+        });
         //启用输入框
         $('#captcha').prop('disabled',false);
-
         var time=30;
         var interval = setInterval(function(){
             time--;

@@ -19,7 +19,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface{
     }
     public function rules(){
         return [
-            [['username','password','email'],'required'],
+            [['username','password_hash','email'],'required'],
             [['tel', 'status','last_login_time','last_login_ip','created_at','updated_at'], 'integer'],
         ];
     }
@@ -34,7 +34,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface{
         return [
             'username'=>'用户名',
 //            'auth_key'=>'',
-            'password'=>')	密码（密文）',
+            'password_hash'=>'	密码（密文）',
             'email'=>'邮箱',
             'tel'=>'电话',
             'last_login_time'=>'最后登录时间',
