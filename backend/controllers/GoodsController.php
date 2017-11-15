@@ -183,4 +183,22 @@ class GoodsController extends Controller{
             ]
         ];
     }
+    //商品列表(商品结果列表)
+    public function actionList(){
+        //查询 电视机 where name like %电视机%
+        $name = \Yii::$app->request->get('name');
+        $sn=\Yii::$app->request->get('sn');
+        $query=Goods::find();
+        if ($name){
+            $query->andWhere(['like','name',$name]);
+        }
+        if($sn){
+            $query->andWhere(['like','sn',$sn]);
+        }
+        $pager=new Pagination();
+        $pager->totalCount=$query->count();;
+        $pager->pageSize=1;
+        $model=$query->offset()->limit()->all();
+        return $this->render('list',['model'=>$model]);
+    }
 }

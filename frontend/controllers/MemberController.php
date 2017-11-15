@@ -1,11 +1,14 @@
 <?php
 
 namespace frontend\controllers;
+use backend\models\Goods;
+use backend\models\GoodsCategory;
 use frontend\components\Sms;
+use backend\models\Goods_intro;
+use frontend\models\Index;
 use frontend\models\LoginForm;
 use frontend\models\Member;
 use frontend\models\Site;
-use yii\data\Pagination;
 use yii\web\Request;
 class MemberController extends \yii\web\Controller
 {
@@ -146,6 +149,11 @@ class MemberController extends \yii\web\Controller
         //跳转
         \Yii::$app->session->setFlash('success','删除成功');
 
-        return $this->redirect(['goods/index']);
+        return $this->redirect(['member/index']);
+    }
+    public function actionGoodsCategory(){
+        $model= GoodsCategory::find()->roots()->all();
+     return $this->render('index',['model'=>$model]);
+
     }
 }

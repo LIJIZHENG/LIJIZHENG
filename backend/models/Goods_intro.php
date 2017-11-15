@@ -18,7 +18,8 @@ class Goods_intro extends ActiveRecord{
             'content'=>'描述',
             ];
     }
-//    public static function getGoods_intro(){
-//        return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
-//    }
+public static function getChildren($id){
+        $children=self::find()->where(["id"=>$id])->all();
+        return $children;
+}
 }

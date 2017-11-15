@@ -64,4 +64,5 @@ public static function getStatusOptions($hidden_del=true){
     public static function getBrand(){
         return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
     }
+
 }

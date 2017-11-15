@@ -1,7 +1,7 @@
 <?php
 namespace frontend\models;
 use yii\db\ActiveRecord;
-class site extends ActiveRecord{
+class Site extends ActiveRecord{
     public function rules()
     {
         return [

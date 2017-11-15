@@ -56,4 +56,27 @@ class Goods extends ActiveRecord{
             'goods_category_id'=>'商品分类id',
         ];
     }
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
+
+    public static function find()
+    {
+        return new GoodsCategoryQuery(get_called_class());
+    }
+
+    //获取Ztree需要的数据
+    public static function getZtreeNodes(){
+        return self::find()->select(['id','name','parent_id'])->asArray()->all();
+    }
+    public static function getGoodsCategory(){
+        return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
+    }
+    public static function getChildren($id){
+        $children = self::find()->where(['parent_id'=>$id])->all();
+        return $children;
+    }
 }
