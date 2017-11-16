@@ -460,7 +460,8 @@
             </dl>
         </div>
     </div>
-     左侧导航菜单
+    左侧导航菜单
+    <a href="/member/add">添加订单</a>
     <table class="table table-bordered">
         <tr>
             <td>收货人</td>
@@ -469,57 +470,25 @@
             <td>城区</td>
             <td>手机号码</td>
             <td>详细地址</td>
+            <td></td>
         </tr>
         <?php foreach ($model as $v):?>
-        <tr>
-            <td><?=$v['name']?></td>
-            <td><?=$v['cmbProvince']?></td>
-            <td><?=$v['cmbCity']?></td>
-            <td><?=$v['cmbArea']?></td>
-            <td><?=$v['tel']?></td>
-            <td><?=$v['address']?></td>
-        </tr>
+            <tr>
+                <td><?=$v['name']?></td>
+                <td><?=$v['cmbProvince']?></td>
+                <td><?=$v['cmbCity']?></td>
+                <td><?=$v['cmbArea']?></td>
+                <td><?=$v['tel']?></td>
+                <td><?=$v['address']?></td>
+                <td>
+                    <a href="<?=\yii\helpers\Url::to(['member/edit','name'=>$v['name']])?>">修改</a>
+                    <a href="<?=\yii\helpers\Url::to(['member/del','name'=>$v['name']])?>">删除</a>
+                </td>
+            </tr>
         <?php endforeach;?>
     </table>
     右侧内容区域
-        <div class="address_bd mt10">
-            <h4>新增收货地址</h4>
-            <form action="" method="post" id="">
-                <ul>
-                    <li>
-                        <label for=""><span>*</span>收 货 人：</label>
-                        <input type="text" name="name" class="txt" />
-                    </li>
-                    <li>
-                        <label for=""><span>*</span>所在地区：</label>
-                        <select id="cmbProvince" name="cmbProvince"></select>
-                        <select id="cmbCity" name="cmbCity"></select>
-                        <select id="cmbArea" name="cmbArea"></select>
-                        <script type="text/javascript">
-                            addressInit('cmbProvince', 'cmbCity', 'cmbArea');
-                        </script>
-                    </li>
-                    <li>
-                        <label for=""><span>*</span>手机号码：</label>
-                        <input type="text" name="tel" class="txt" />
-                    </li>
-                    <li>
-                        <label for=""><span>*</span>详细地址：</label>
-                        <input type="text" name="address" class="txt address"  />
-                    </li>
-                    <li>
-                        <label for="">&nbsp;</label>
-                        <input type="checkbox" name="" class="check" />设为默认地址
-                    </li>
-                    <li>
-                        <label for="">&nbsp;</label>
-                        <input type="submit" name="" class="btn" value="保存" />
-                    </li>
-                </ul>
-            </form>
-        </div>
-    </div>
-    <!-- 右侧内容区域 end -->
+<!-- 右侧内容区域 end -->
 </div>
 <!-- 页面主体 end-->
 
@@ -615,30 +584,30 @@
     </p>
 </div>
 <script>
-//    $().ready(function() {
-//// 在键盘按下并释放及提交后验证提交表单
-//        $("#result").validate({
-//            rules: {
-//                name: {
-//                    required: true,
-//                    minlength: 2
-//                },
-//                site: {
-//                    required: true,
-//                    minlength: 2
-//                }
-//                tel: {
-//                    required: "#newsletter:checked",
-//                    minlength: 2
-//                },
-//                messages: {
-//                   name: {
-//                        required: "请输入收货名",
-//                        minlength: "收货名必需由两个字母组成"
-//                    },
-//            }
-//        })
-//    });
+    //    $().ready(function() {
+    //// 在键盘按下并释放及提交后验证提交表单
+    //        $("#result").validate({
+    //            rules: {
+    //                name: {
+    //                    required: true,
+    //                    minlength: 2
+    //                },
+    //                site: {
+    //                    required: true,
+    //                    minlength: 2
+    //                }
+    //                tel: {
+    //                    required: "#newsletter:checked",
+    //                    minlength: 2
+    //                },
+    //                messages: {
+    //                   name: {
+    //                        required: "请输入收货名",
+    //                        minlength: "收货名必需由两个字母组成"
+    //                    },
+    //            }
+    //        })
+    //    });
 
 </script>
 </body>

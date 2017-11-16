@@ -61,7 +61,7 @@
 <div class="header w1210 bc mt15">
     <!-- 头部上半部分 start 包括 logo、搜索、用户中心和购物车结算 -->
     <div class="logo w1210">
-        <h1 class="fl"><a href="index.html"><img src="images/logo.png" alt="京西商城"></a></h1>
+        <h1 class="fl"><a href="index.html"><img src="/images/logo.png" alt="京西商城"></a></h1>
         <!-- 头部搜索 start -->
         <div class="search fl">
             <div class="search_form">
@@ -118,7 +118,7 @@
                         <ul>
                             <li><a href=""><img src="/images/view_list1.jpg" alt="" /></a></li>
                             <li><a href=""><img src="/images/view_list2.jpg" alt="" /></a></li>
-                            <li><a href=""><img src="images/view_list3.jpg" alt="" /></a></li>
+                            <li><a href=""><img src="/images/view_list3.jpg" alt="" /></a></li>
                         </ul>
                     </div>
                 </dd>
@@ -155,24 +155,25 @@
                 <em></em>
             </div>
 
-            <div class="cat_bd none">
-                <?php foreach ($model as $category):?>
-                <div class="cat item1">
-                    <h3><a href=""><?=$category->name?></a> <b></b></h3>
-                    <div class="cat_detail none">
+            <?php foreach ($model as $category):?>
+                <div class="cat">
+                    <h3><a href="content?id=<?$category->id?>"><?=$category->content?></a><b></b></h3>
+                    <div class="cat_detail">
                         <?php foreach (\backend\models\Goods_intro::getChildren($category->id) as $erji):?>
-                        <dl class="dl_1st">
-                            <dt><a href=""><?=$erji->content?></a></dt>
-                            <dd>
-                                <?php foreach ($erji->children()->all() as $sanji):?>
-                                <a href=""><?=$sanji->content?></a>
-                                <?php endforeach;?>
-                            </dd>
-                        </dl>
+                            <dl class="dl_1st">
+                                <dt><a href="content?id=<?$category->id?>"><?=$erji->content?></a></dt>
+                                <dd>
+                                    <?php foreach ($erji->children()->all() as $sanji):?>
+
+                                        <a href="content?id=<?$category->id?>"><?=$erji->content?></a>
+                                    <?php endforeach;?>
+                                </dd>
+                            </dl>
                         <?php endforeach;?>
                     </div>
                 </div>
-                <?php endforeach;?>
+            <?php endforeach;?>
+
                 <div class="cat">
                     <h3><a href="">家用电器</a><b></b></h3>
                     <div class="cat_detail">
@@ -387,7 +388,7 @@
                 <ul>
                     <li>
                         <dl>
-                            <dt><a href=""><img src="images/relate_view1.jpg" alt="" /></a></dt>
+                            <dt><a href=""><img src="/images/relate_view1.jpg" alt="" /></a></dt>
                             <dd><a href="">ThinkPad E431(62771A7) 14英寸笔记本电脑 (i5-3230 4G 1TB 2G独显 蓝牙 win8)</a></dd>
                             <dd><strong>￥5199.00</strong></dd>
                         </dl>
@@ -403,7 +404,7 @@
 
                     <li>
                         <dl>
-                            <dt><a href=""><img src="images/relate_view3.jpg" alt="" /></a></dt>
+                            <dt><a href=""><img src="/images/relate_view3.jpg" alt="" /></a></dt>
                             <dd><a href="">T联想（Lenovo） Yoga13 II-Pro 13.3英寸超极本 （i5-4200U 4G 128G固态硬盘 摄像头 蓝牙 Win8）晧月银</a></dd>
                             <dd><strong>￥7999.00</strong></dd>
                         </dl>
@@ -489,12 +490,12 @@
                             <li>
                                 <a href="javascript:void(0);"
                                    rel="{gallery: 'gal1', smallimage: 'images/preview_m5.jpg',largeimage: 'images/preview_l5.jpg'}">
-                                    <img src="images/preview_s5.jpg"></a>
+                                    <img src="/images/preview_s5.jpg"></a>
                             </li>
                             <li>
                                 <a href="javascript:void(0);"
                                    rel="{gallery: 'gal1', smallimage: 'images/preview_m6.jpg',largeimage: 'images/preview_l6.jpg'}">
-                                    <img src="images/preview_s6.jpg"></a>
+                                    <img src="/images/preview_s6.jpg"></a>
                             </li>
                             <li>
                                 <a href="javascript:void(0);"
@@ -529,7 +530,6 @@
                 </ul>
                 <form action="" method="post" class="choose">
                     <ul>
-
                         <li>
                             <dl>
                                 <dt>购买数量：</dt>
@@ -756,7 +756,7 @@
 
                     <!-- 分页信息 start -->
                     <div class="page mt20">
-                        <a href="/member/goods-category">首页</a>
+                        <a href="">首页</a>
                         <a href="">上一页</a>
                         <a href="">1</a>
                         <a href="">2</a>

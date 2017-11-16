@@ -38,7 +38,7 @@ AppAsset::register($this);
 
     if (Yii::$app->user->isGuest) {
         $menuItems = [];
-        $menuItems[] = ['label' => '登录', 'url' =>['user/login']];
+        $menuItems[] = ['label' => '登录', 'url' =>['/member/login']];
     } else {
         $menuItems = Yii::$app->user->identity->menus;
         $menuItems[] = '<li>'

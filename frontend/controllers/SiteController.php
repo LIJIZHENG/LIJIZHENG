@@ -259,4 +259,5 @@ class SiteController extends Controller
         $models = $query->limit($pager->limit)->offset($pager->offset)->all();
         return $this->render('list',['models'=>$models,'pager'=>$pager]);
     }
+    //购物车
 }

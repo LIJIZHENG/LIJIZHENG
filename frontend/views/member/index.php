@@ -138,9 +138,9 @@
             <div class="cat_bd">
                <?php foreach ($model as $category):?>
                 <div class="cat item1">
-                    <h3><a href="<?=$category->name?>"><?=$category->name?></a> <b></b></h3>
+                    <h3><a href=""><?=$category->name?></a> <b></b></h3>
                     <div class="cat_detail">
-                        <?php foreach (\backend\models\GoodsCategory::getChildren($category->id) as $erji):?>
+                        <?php foreach (\backend\models\Goods_intro::getChildren($category->id) as $erji):?>
                         <dl class="dl_1st">
                             <dt><a href=""><?=$erji->name?></a></dt>
                             <dd>

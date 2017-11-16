@@ -56,7 +56,7 @@
                     </li>
                     <li>
                         <label for="">密码：</label>
-                        <input type="password_hash" class="txt" name="password_hash" />
+                        <input type="password" class="txt" name="password" />
                         <a href="">忘记密码?</a>
                     </li>
                     <li class="checkcode">
