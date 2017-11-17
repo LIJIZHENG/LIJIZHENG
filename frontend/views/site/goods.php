@@ -439,7 +439,10 @@
     <!-- 导航条部分 end -->
 </div>
 <!-- 头部 end-->
+
 <div style="clear:both;"></div>
+
+
 <!-- 商品页面主体 start -->
 <div class="main w1210 mt10 bc">
     <!-- 面包屑导航 start -->
@@ -553,8 +556,8 @@
             <!-- 图片预览区域 start -->
             <div class="preview fl">
                 <div class="midpic">
-                    <a href="<?=$model->logo?>" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
-                        <img src="<?=$model->logo?>" style="width: 350px" alt="" />               <!-- 第一幅图片的中图 -->
+                    <a href="http://admin.yii2shop.com/<?=$model->logo?>" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
+                        <img src="http://admin.yii2shop.com/<?=$model->logo?>" style="width: 350px" alt="" />               <!-- 第一幅图片的中图 -->
                     </a>
                 </div>
 
@@ -566,11 +569,11 @@
                     <div class="smallpic_wrap">
                         <ul>
                             <li class="cur">
-                                <a class="zoomThumbActive" href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: '<?=$model->logo?>',largeimage: '<?=$model->logo?>'}"><img src="<?=$model->logo?>"></a>
+                                <a class="zoomThumbActive" href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: 'http://admin.yii2shop.com/<?=$model->logo?>',largeimage: 'http://admin.yii2shop.com/<?=$model->logo?>'}"><img src="http://admin.yii2shop.com/<?=$model->logo?>"></a>
                             </li>
                             <?php foreach ($img as $img):?>
                             <li>
-                                <a href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: '<?=$img->path?>',largeimage: '<?=$img->path?>'}" style="width: 50px"><img src="<?=$img->path?>" style="width: 50px"></a>
+                                <a href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: 'http://admin.yii2shop.com/<?=$img->path?>',largeimage: 'http://admin.yii2shop.com/<?=$img->path?>'}" style="width: 50px"><img src="http://admin.yii2shop.com/<?=$img->path?>" style="width: 50px"></a>
                             </li>
                             <?php endforeach;?>
                         </ul>
@@ -589,7 +592,7 @@
                     <li><span>上架时间：</span><?=date("Y-m-d",$model->create_time)?></li>
                     <li class="star"><span>商品评分：</span> <strong></strong><a href="">(已有21人评价)</a></li> <!-- 此处的星级切换css即可 默认为5星 star4 表示4星 star3 表示3星 star2表示2星 star1表示1星 -->
                 </ul>
-                <form action="<?=\yii\helpers\Url::to(['cart/add-cart'])?>" method="post" class="choose">
+                <form action="" method="post" class="choose">
                     <ul>
                         <li>
                             <dl>
@@ -598,7 +601,6 @@
                                     <a href="javascript:;" id="reduce_num"></a>
                                     <input type="text" name="amount" value="1" class="amount"/>
                                     <a href="javascript:;" id="add_num"></a>
-                                    <input type="hidden" name="goods_id" value="<?=$intro->goods_id?>">
                                 </dd>
                             </dl>
                         </li>
@@ -895,7 +897,10 @@
 
 </div>
 <!-- 商品页面主体 end -->
+
+
 <div style="clear:both;"></div>
+
 <!-- 底部导航 start -->
 <div class="bottomnav w1210 bc mt10">
     <div class="bnav1">
@@ -958,6 +963,7 @@
     </div>
 </div>
 <!-- 底部导航 end -->
+
 <div style="clear:both;"></div>
 <!-- 底部版权 start -->
 <div class="footer w1210 bc mt10">
@@ -985,6 +991,7 @@
     </p>
 </div>
 <!-- 底部版权 end -->
+
 <script type="text/javascript">
     document.execCommand("BackgroundImageCache", false, true);
 </script>

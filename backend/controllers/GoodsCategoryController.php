@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\Goods;
 use backend\models\GoodsCategory;
 use yii\web\Response;
 use yii\data\Pagination;
@@ -75,7 +76,6 @@ class GoodsCategoryController extends \yii\web\Controller
         }
         return $this->render('add',['model'=>$model]);
     }
-//商品分类管理AJAX版
     public function actionAjax($filter){
         $this->enableCsrfValidation = false;
         \Yii::$app->response->format = Response::FORMAT_JSON;//将输出自动格式化为json格式

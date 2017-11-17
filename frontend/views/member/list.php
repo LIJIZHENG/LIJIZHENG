@@ -136,153 +136,27 @@
                 <em></em>
             </div>
 
-                <div class="cat">
-                    <h3><a href="">家用电器</a><b></b></h3>
-                    <div class="cat_detail">
+
+
+           <div class="cat_bd none">
+               <?php foreach ($model as $category):?>
+                <div class="cat item1">
+                    <h3><a href=""><?=$category->name?></a> <b></b></h3>
+                    <div class="cat_detail none">
+                        <?php foreach (\backend\models\GoodsCategory::getChildren($category->id) as $erji):?>
                         <dl class="dl_1st">
-                            <dt><a href="">大家电</a></dt>
+                            <dt><a href=""><?=$erji->name?></a></dt>
                             <dd>
-                                <a href="">平板电视</a>
-                                <a href="">空调</a>
-                                <a href="">冰箱</a>
-                                <a href="">洗衣机</a>
-                                <a href="">热水器</a>
-                                <a href="">DVD</a>
-                                <a href="">烟机/灶具</a>
+                                <?php foreach ($erji->children()->all() as $sanji):?>
+                                <a href="">    <a href="/order/details?id=10?id=<?=$category->id?>"><?=$sanji->name?></a>
+                                    <a href="/order/details?id=10?id=<?=$category->id?>"><?=$sanji->name?></a>
+                                    <?php endforeach;?>
                             </dd>
                         </dl>
-
-                        <dl>
-                            <dt><a href="">生活电器</a></dt>
-                            <dd>
-                                <a href="">取暖器</a>
-                                <a href="">加湿器</a>
-                                <a href="">净化器</a>
-                                <a href="">饮水机</a>
-                                <a href="">净水设备</a>
-                                <a href="">吸尘器</a>
-                                <a href="">电风扇</a>
-                            </dd>
-                        </dl>
-
-                        <dl>
-                            <dt><a href="">厨房电器</a></dt>
-                            <dd>
-                                <a href="">电饭煲</a>
-                                <a href="">豆浆机</a>
-                                <a href="">面包机</a>
-                                <a href="">咖啡机</a>
-                                <a href="">微波炉</a>
-                                <a href="">电磁炉</a>
-                                <a href="">电水壶</a>
-                            </dd>
-                        </dl>
-
-                        <dl>
-                            <dt><a href="">个护健康</a></dt>
-                            <dd>
-                                <a href="">剃须刀</a>
-                                <a href="">电吹风</a>
-                                <a href="">按摩器</a>
-                                <a href="">足浴盆</a>
-                                <a href="">血压计</a>
-                                <a href="">体温计</a>
-                                <a href="">血糖仪</a>
-                            </dd>
-                        </dl>
-
-                        <dl>
-                            <dt><a href="">五金家装</a></dt>
-                            <dd>
-                                <a href="">灯具</a>
-                                <a href="">LED灯</a>
-                                <a href="">水槽</a>
-                                <a href="">龙头</a>
-                                <a href="">门铃</a>
-                                <a href="">电器开关</a>
-                                <a href="">插座</a>
-                            </dd>
-                        </dl>
+                        <?php endforeach;?>
                     </div>
                 </div>
-
-                <div class="cat">
-                    <h3><a href="">手机、数码</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">电脑、办公</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">家局、家具、家装、厨具</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">服饰鞋帽</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">个护化妆</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">礼品箱包、钟表、珠宝</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">运动健康</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">汽车用品</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">母婴、玩具乐器</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">食品饮料、保健食品</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">彩票、旅行、充值、票务</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
+               <?php endforeach;?>
             </div>
 
         </div>
@@ -382,7 +256,7 @@
                 <ul>
                     <li>
                         <dl>
-                            <dt><a href=""><img src="/images/list_hot1.jpg" alt="" /></a></dt>
+                            <dt><a href=""><img src="images/list_hot1.jpg" alt="" /></a></dt>
                             <dd><a href="">美即流金丝语悦白美颜新年装4送3</a></dd>
                             <dd><strong>￥777.50</strong></dd>
                         </dl>
@@ -390,7 +264,7 @@
 
                     <li>
                         <dl>
-                            <dt><a href=""><img src="/images/list_hot2.jpg" alt="" /></a></dt>
+                            <dt><a href=""><img src="images/list_hot2.jpg" alt="" /></a></dt>
                             <dd><a href="">领券满399减50 金斯利安多维片</a></dd>
                             <dd><strong>￥239.00</strong></dd>
                         </dl>
@@ -571,62 +445,22 @@
         <div style="clear:both;"></div>
 
         <!-- 商品列表 start-->
+        <?php foreach ($model as $value):?>
         <div class="goodslist mt10">
+            <?php foreach (\backend\models\Goods::getChildren($value->id) as $erji):?>
+
             <ul>
                 <li>
                     <dl>
-                        <dt><a href=""><img src="/images/goods1.jpg" alt="" /></a></dt>
-                        <dd><a href="">清华同方精锐X2 台式电脑（双核E3500 2G 500G DVD 键鼠）带20英寸显示器</a></dt>
-                        <dd><strong>￥2399.00</strong></dt>
-                        <dd><a href=""><em>已有10人评价</em></a></dt>
+<!--                        <dt><a href="/order/details?id=10?id=--><?//=$value->id?><!--">--><?//=$value->logo?><!--</a></dt>-->
+                        <dd><a href="/order/details?id=10?id=<?=$value->id?>"><?=$value->name?></a></dt>
+                        <dd><a href="/order/details?id=10?id=<?=$value->id?>"><em>已有10人评价</em></a></dt>
                     </dl>
-                </li>
-
-                <li>
-                    <dl>
-                        <dt><a href=""><img src="/images/goods2.jpg" alt="" /></a></dt>
-                        <dd><a href="">富士通LH531 14.1英寸笔记本电脑（i3-2350M 2G 320G 第二代核芯显卡 D刻</a></dd>
-                        <dd><strong>￥2999.00</strong></dd>
-                        <dd><a href=""><em>已有5人评价</em></a></dd>
-                    </dl>
-                </li>
-
-                <li>
-                    <dl>
-                        <dt><a href=""><img src="/images/goods3.jpg" alt="" /></a></dt>
-                        <dd><a href="">三星Galaxy Tab P6800 7.7英寸 3G手机版 蓝牙3.0 魔丽屏 金属银</a></dd>
-                        <dd><strong>￥4699.00</strong></dd>
-                        <dd><a href=""><em>已有34人评价</em></a></dd>
-                    </dl>
-                </li>
-
-                <li>
-                    <dl>
-                        <dt><a href=""><img src="/images/goods4.jpg" alt="" /></a></dt>
-                        <dd><a href="">宏碁AS4739-382G32Mnkk 14英寸笔记本电脑（i3-380M 2G 320G D刻 LED背</a></dd>
-                        <dd><strong>￥2799.00</strong></dd>
-                        <dd><a href=""><em>已有17人评价</em></a></dd>
-                    </dl>
-                </li>
-
-                <li>
-                    <dl>
-                        <dt><a href=""><img src="/images/goods5.jpg" alt="" /></a></dt>
-                        <dd><a href="">ThinkPad E42014英寸笔记本电脑（i5-2450M 2G 320G 蓝牙 摄像头）</a></dd>
-                        <dd><strong>￥4199.00</strong></dd>
-                        <dd><a href=""><em>已有8人评价</em></a></dd>
-                    </dl>
-                </li>
-
-                <li>
-                    <dl>
-                        <dt><a href=""><img src="/images/goods6.jpg" alt="" /></a></dt>
-                        <dd><a href="">惠普G4-1332TX 14英寸笔记本电脑 （i5-2450M 2G 500G 7450M 1G独显 D刻</a></dd>
-                        <dd><strong>￥2999.00</strong></dd>
-                        <dd><a href=""><em>已有22人评价</em></a></dd>
-                    </dl>
+                <?php endforeach;?>
                 </li>
             </ul>
+                <?php endforeach;?>
+
         </div>
         <!-- 商品列表 end-->
 

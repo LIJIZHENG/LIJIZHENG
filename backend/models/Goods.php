@@ -76,7 +76,7 @@ class Goods extends ActiveRecord{
         return ArrayHelper::map(self::find()->asArray()->all(),'id','name');
     }
     public static function getChildren($id){
-        $children = self::find()->where(['parent_id'=>$id])->all();
+        $children = self::find()->where(['id'=>$id])->all();
         return $children;
     }
 }

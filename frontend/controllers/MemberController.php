@@ -1,8 +1,8 @@
 <?php
-
 namespace frontend\controllers;
 use backend\models\Goods;
 use backend\models\GoodsCategory;
+use backend\models\Permissions;
 use frontend\components\Sms;
 use backend\models\Goods_intro;
 use frontend\models\Index;
@@ -73,11 +73,9 @@ class MemberController extends \yii\web\Controller
             return false;
         };
     }
-
     //测试阿里大于短信发送功能
     //登录
     public function actionLogin(){
-
         //登录表单
         $model = new LoginForm();
         $request = \Yii::$app->request;
@@ -85,19 +83,24 @@ class MemberController extends \yii\web\Controller
             $model->load($request->post(),'');
             if($model->validate()){
                 if($model->login()){
-                    \Yii::$app->session->setFlash('success','登录成功');
+                   \Yii::$app->session->setFlash('success','成功登录');
                     //跳转
-                    return $this->redirect(['member/member']);
+                    return $this->redirect(['member/index']);
                 };
             }else{
                 var_dump($model->getErrors());
             }
+        }else{
+            return $this->render('login',['model'=>$model]);
         }
-        return $this->render('login',['model'=>$model]);
+    }
+    //注销
+    public function actionLognt(){
+        \Yii::$app->user->logout();
+        return $this->redirect(['login']);
     }
     //验证用户名唯一
     public function actionCheckName($username){
-
         if($username=='admin'){
             return 'false';
         }
@@ -140,7 +143,7 @@ class MemberController extends \yii\web\Controller
         }
     }
     public function actionIndex(){
-        $model=Site::find()->all();
+        $model=Goods::find()->all();
         return $this->render('index',['model'=>$model]);
     }
     public function actionDel($id){
@@ -151,9 +154,24 @@ class MemberController extends \yii\web\Controller
 
         return $this->redirect(['member/index']);
     }
+    //商品列表
+    public function actionContent($id){
+        $goods_category = GoodsCategory::find()->where(['id'=>$id])->one();
+        if($goods_category->depth == 2){
+            $query = Goods::find()->where(['goods_category_id'=>$id]);
+        }else{
+            $ids = $goods_category->Children()->andWhere(['depth'=>2])->column();
+            $query = Goods::find()->where(['in','goods_category_id',$ids]);
+        }
+//        $pager = new Permissions();
+//        $pager->pageSize = 8;
+//        $pager->totalCount = $query->count();
+//        $model = $query->limit($pager->limit)->offset($pager->offset)->all();
+        $model=$query->all();
+        return $this->render('list',['model'=>$model]);
+    }
     public function actionGoodsCategory(){
         $model= GoodsCategory::find()->roots()->all();
-     return $this->render('index',['model'=>$model]);
-
+     return $this->render('list',['model'=>$model]);
     }
 }

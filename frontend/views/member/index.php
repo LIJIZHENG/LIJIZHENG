@@ -23,7 +23,17 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="/member/login">登录</a>] [<a href="/member/regist">免费注册</a>] </li>
+                <li>您好，欢迎来到京西！
+                    <?php
+                    if(Yii::$app->user->isGuest){
+                        echo'<a href="login">登录</a>
+ [<a href="register">免费注册</a>]';
+                    }else{
+                        echo '<a href="login">注销</a>';
+                    }
+                    ?>
+
+                </li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -136,119 +146,24 @@
             </div>
 
             <div class="cat_bd">
-               <?php foreach ($model as $category):?>
-                <div class="cat item1">
-                    <h3><a href=""><?=$category->name?></a> <b></b></h3>
-                    <div class="cat_detail">
-                        <?php foreach (\backend\models\Goods_intro::getChildren($category->id) as $erji):?>
-                        <dl class="dl_1st">
-                            <dt><a href=""><?=$erji->name?></a></dt>
-                            <dd>
-                                <?php foreach ($erji->children()->all() as $sanji):?>
-                                    <a href="content?id=<?=$category->id?>"><?=$sanji->name?></a>
-                                <?php endforeach;?>
-                            </dd>
-                        </dl>
-                        <?php endforeach;?>
+                <?php foreach ($model as $category):?>
+                    <div class="cat item1">
+                        <h3><a href=""><?=$category->name?></a> <b></b></h3>
+                        <div class="cat_detail none">
+                            <?php foreach (\backend\models\GoodsCategory::getChildren($category->id) as $erji):?>
+                                <dl class="dl_1st">
+                                    <dt><a href=""><?=$erji->name?></a></dt>
+                                    <dd>
+                                        <?php foreach ($erji->children()->all() as $sanji):?>
+                                        <a href="">    <a href="goods-category?id=<?=$category->id?>"><?=$sanji->name?></a>
+                                            <a href="goods-category?id=<?=$category->id?>"><?=$sanji->name?></a>
+                                            <?php endforeach;?>
+                                    </dd>
+                                </dl>
+                            <?php endforeach;?>
+                        </div>
                     </div>
-                </div>
-               <?php endforeach;?>
-              <?php foreach ($model as $category):?>
-                <div class="cat">
-                    <h3><a href=""><?=$category->name?></a><b></b></h3>
-                    <div class="cat_detail">
-                        <?php foreach (\backend\models\GoodsCategory::getChildren($category->id) as $erji):?>
-                        <dl class="dl_1st">
-                            <dt><a href=""><?=$erji->name?></a></dt>
-                            <dd>
-                            <?php foreach ($erji->children()->all() as $sanji):?>
-                                <a href=""><?=$sanji->name?></a>
-                             <?php endforeach;?>
-                            </dd>
-                        </dl>
-                        <?php endforeach;?>
-                    </div>
-                </div>
                 <?php endforeach;?>
-
-                <div class="cat">
-
-                    <h3><a href="">手机、数码</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">电脑、办公</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">家局、家具、家装、厨具</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">服饰鞋帽</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">个护化妆</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">礼品箱包、钟表、珠宝</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">运动健康</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">汽车用品</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">母婴、玩具乐器</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">食品饮料、保健食品</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
-                <div class="cat">
-                    <h3><a href="">彩票、旅行、充值、票务</a><b></b></h3>
-                    <div class="cat_detail none">
-
-                    </div>
-                </div>
-
             </div>
 
         </div>

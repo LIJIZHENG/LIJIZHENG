@@ -2,11 +2,13 @@
 namespace frontend\controllers;
 
 use backend\models\Goods;
+use backend\models\Goods_intro;
 use backend\models\GoodsCategory;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -16,17 +18,20 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\Cookie;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    public $enableCsrfValidation = false;
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
+
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -219,6 +224,7 @@ class SiteController extends Controller
 
 
     //商品列表
+    //商品列表
     public function actionList($goods_category_id){
         //商品分类  一级  二级  三级
         $goods_category = GoodsCategory::findOne(['id'=>$goods_category_id]);
@@ -259,5 +265,145 @@ class SiteController extends Controller
         $models = $query->limit($pager->limit)->offset($pager->offset)->all();
         return $this->render('list',['models'=>$models,'pager'=>$pager]);
     }
+    public function actionDetails($id)
+    {
+        $model = Goods::findOne($id);
+        $img = GoodsCategory::find()->where(['id' => $id])->all();
+        $intro = Goods_intro::findOne(['goods_id' => $id]);
+        return $this->render('goods', ['model' => $model, 'img' => $img, 'intro' => $intro]);
+    }
     //购物车
+    //测试:将测试数据保存到cookie
+    public function actionAddCart($goods_id,$amount){
+        //(商品已经添加到购物车)添加操作是在当前页面执行
+        //需要判断登录和未登录
+        if(Yii::$app->user->isGuest){
+            //操作cookie购物车
+            //获取cookie中购物车数据
+            $cookies = Yii::$app->request->cookies;
+            $carts = $cookies->getValue('carts');
+            if($carts){
+                $carts = unserialize($carts);//$carts = ['1'=>'3','2'=>'2'];
+            }else{
+                $carts = [];
+            }
+
+            //$carts = [2=>10];//=>[2=>10,1=>99]
+            //购物车中是否存在该商品,如果存在数量累加 不存在,直接添加
+            if(array_key_exists($goods_id,$carts)){
+                $carts[$goods_id] += $amount;
+            }else{
+                $carts[$goods_id] = $amount;
+            }
+            //var_dump($carts);exit;
+            //$carts = [$goods_id=>$amount];
+            $cookies = Yii::$app->response->cookies;
+            $cookie = new Cookie();
+            $cookie->name = 'carts';
+            $cookie->value = serialize($carts);
+            $cookies->add($cookie);
+
+
+        }else{
+            //操作数据库购物车
+        }
+
+        //跳转到购物车页面
+        return $this->redirect(['cart']);// site=>site/login  member=>member/login
+    }
+    //删除购物车
+    public function actionDel(){
+        $id=\Yii::$app->request->post();
+        if(\Yii::$app->user->isGuest){//未登录
+            $cookies =\Yii::$app->request->cookies;
+            $carts=unserialize($cookies->getValue('carts'));
+            unset($carts[$id]);
+            $cookies=\Yii::$app->request->cookies;
+            $cookie=new Cookie();
+            $cookie->name='carts';
+            $cookie->value=serialize($carts);
+            $cookies->add($cookie);
+            echo "删除成功";
+        }else{//登录
+            $model = Cart::deleteAll(['goods_id'=>$id]);
+            if($model){
+                echo "1";
+            }else{
+                echo "0";
+            }
+        }
+    }
+    //购物车页面
+    public function actionCart(){
+        //需要判断登录和未登录
+        if(Yii::$app->user->isGuest){
+            //未登录,购物车数据存放到cookie
+            //举例: id为1的商品3个 id为8的商品有2个
+            /*$carts = [
+                ['goods_id'=>1,'amount'=>3],
+                ['goods_id'=>8,'amount'=>2],
+            ];*/
+            //能否使用使用一维数组来简化购物车
+            //$carts = ['1'=>'3','2'=>'2'];
+
+            //从cookie中取出购物车数据,调用视图展示
+            $cookies = Yii::$app->request->cookies;
+            $carts = $cookies->getValue('carts');
+            if($carts){
+                $carts = unserialize($carts);//$carts = ['1'=>'3','2'=>'2'];
+            }else{
+                $carts = [];
+            }
+            //$carts肯定是一个数组
+            //获取购物车商品信息
+            $models = Goods::find()->where(['in','id',array_keys($carts)])->all();
+            //$models = [GOODS,GOODS,GOODS]
+            //var_dump($models);exit;
+
+
+        }else{
+            //已登录,购物车数据存放到数据表
+            //$carts= [CART,CART...];  =>['1'=>'3','2'=>'2']
+            //$carts需要转换一下格式
+            $carts = Carts::find()->where(['member_id'=>\Yii::$app->user->id])->all();
+            $carts = ArrayHelper::map($carts,'goods_id','amount');
+            $models=Goods::find()->where(['in','id',array_keys($carts)])->all();
+        }
+        return $this->render('flow1',['carts'=>$carts,'models'=>$models]);
+    }
+
+    //AJAX操作购物车
+    public function actionAjaxCart($type){
+        //登录操作数据库 未登录操作cookie
+        switch ($type){
+            case 'change'://修改购物车
+                $goods_id = Yii::$app->request->post('goods_id');
+                $amount = Yii::$app->request->post('amount');
+                if(Yii::$app->user->isGuest){
+                    //取出cookie中的购物车
+                    $cookies = Yii::$app->request->cookies;
+                    $carts = $cookies->getValue('carts');
+                    if($carts){
+                        $carts = unserialize($carts);//$carts = ['1'=>'3','2'=>'2'];
+                    }else{
+                        $carts = [];
+                    }
+                    //修改购物车商品数量
+                    $carts[$goods_id] = $amount;
+                    //保存cookie
+                    $cookies = Yii::$app->response->cookies;
+                    $cookie = new Cookie();
+                    $cookie->name = 'carts';
+                    $cookie->value = serialize($carts);
+                    $cookies->add($cookie);
+
+                }else{
+
+                }
+                break;
+            case 'del':
+
+                break;
+        }
+    }
 }
