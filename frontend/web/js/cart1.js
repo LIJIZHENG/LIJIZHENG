@@ -3,9 +3,7 @@
 @作者：diamondwang
 @时间：2013年11月14日
 */
-
 $(function(){
-	
 	//减少
 	$(".reduce_num").click(function(){
 		var amount = $(this).parent().find(".amount");
@@ -67,10 +65,10 @@ var totals = function () {
 
     $("#total").text(total.toFixed(2));
     //console.log(total);
-}
+};
 //修改购物车数量
-var change = function (goods_id,amount) {
-	$.post("/cart/ajax-cart?type=change",{goods_id:goods_id,amount:amount},function (data) {
+var change = function (goods_id,amount){
+	$.post("/cart/ajax-cart",{goods_id:goods_id,amount:amount},function (data) {
 
     });
-}
+};

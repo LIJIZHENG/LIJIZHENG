@@ -5,6 +5,7 @@ use backend\models\GoodsCategory;
 use backend\models\Permissions;
 use frontend\components\Sms;
 use backend\models\Goods_intro;
+use frontend\models\Cart;
 use frontend\models\Index;
 use frontend\models\LoginForm;
 use frontend\models\Member;
@@ -17,15 +18,17 @@ class MemberController extends \yii\web\Controller
     public function actionRegist()
     {
         $model = new Member();
-        $request = new Request();
+        $request = \Yii::$app->request;
         if ($request->isPost) {
 //            var_dump($request->isPost);die;
             $model->load($request->post(),'');
-            var_dump($request->post());
+//            var_dump($request->post());
             if ($model->validate()) {
                 $model->save(false);
+                $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
+                $model->created_at = time();
                 \Yii::$app->session->setFlash('success', '添加成功');
-                return $this->redirect(['member/member']);
+                return $this->redirect(['member/regist']);
             }else{
                 var_dump($model->getErrors());
             }
@@ -75,26 +78,63 @@ class MemberController extends \yii\web\Controller
     }
     //测试阿里大于短信发送功能
     //登录
+//    public function actionLogin(){
+//        //登录表单
+//        $model = new LoginForm();
+//        $request = \Yii::$app->request;
+//        if($request->isPost){
+//            $model->load($request->post(),'');
+//            if($model->validate()){
+//                if($model->login()){
+//                   \Yii::$app->session->setFlash('success','成功登录');
+//                    //跳转
+//                    return $this->redirect(['member/index']);
+//                };
+//            }else{
+//                var_dump($model->getErrors());
+//            }
+//        }else{
+//            return $this->render('login',['model'=>$model]);
+//        }
+//    }
     public function actionLogin(){
-        //登录表单
-        $model = new LoginForm();
+        $model = new \frontend\models\LoginForm();
         $request = \Yii::$app->request;
         if($request->isPost){
             $model->load($request->post(),'');
             if($model->validate()){
-                if($model->login()){
-                   \Yii::$app->session->setFlash('success','成功登录');
-                    //跳转
+                if($model->login($model->cookie)){
+                    $cookies = \Yii::$app->request->cookies;
+                    $carts = unserialize($cookies->getValue('carts'));
+                    if(!$carts){
+                        $carts = [];
+                    }
+                    foreach($carts as $k=>$v){
+                        $model = Cart::find()->where(['goods_id'=>$k])->andWhere(['member_id'=>\Yii::$app->user->id])->one();
+                        if($model){
+                            $model->amount += $v;
+                            $model->save();
+                        }else{
+                            $cart = new Cart();
+                            $cart->goods_id = $k;
+                            $cart->amount = $v;
+                            $cart->member_id = \Yii::$app->user->id;
+                            $cart->save();
+                        }
+                    }
+                    \Yii::$app->response->cookies->remove('carts');
+                    //成功跳转
+                    \Yii::$app->session->setFlash('success','登陆成功');
                     return $this->redirect(['member/index']);
-                };
-            }else{
-                var_dump($model->getErrors());
+                } else {
+                    return $this->render('login',['model'=>$model]);
+                }
             }
-        }else{
-            return $this->render('login',['model'=>$model]);
         }
+        //显示页面
+        return $this->render('login');
     }
-    //注销
+//    注销
     public function actionLognt(){
         \Yii::$app->user->logout();
         return $this->redirect(['login']);
@@ -155,22 +195,22 @@ class MemberController extends \yii\web\Controller
         return $this->redirect(['member/index']);
     }
     //商品列表
-    public function actionContent($id){
-        $goods_category = GoodsCategory::find()->where(['id'=>$id])->one();
-        if($goods_category->depth == 2){
-            $query = Goods::find()->where(['goods_category_id'=>$id]);
-        }else{
-            $ids = $goods_category->Children()->andWhere(['depth'=>2])->column();
-            $query = Goods::find()->where(['in','goods_category_id',$ids]);
-        }
-//        $pager = new Permissions();
-//        $pager->pageSize = 8;
-//        $pager->totalCount = $query->count();
-//        $model = $query->limit($pager->limit)->offset($pager->offset)->all();
-        $model=$query->all();
-        return $this->render('list',['model'=>$model]);
-    }
-    public function actionGoodsCategory(){
+//    public function actionContent($id){
+//        $goods_category = GoodsCategory::find()->where(['id'=>$id])->one();
+//        if($goods_category->depth == 2){
+//            $query = Goods::find()->where(['goods_category_id'=>$id]);
+//        }else{
+//            $ids = $goods_category->Children()->andWhere(['depth'=>2])->column();
+//            $query = Goods::find()->where(['in','goods_category_id',$ids]);
+//        }
+////        $pager = new Permissions();
+////        $pager->pageSize = 8;
+////        $pager->totalCount = $query->count();
+////        $model = $query->limit($pager->limit)->offset($pager->offset)->all();
+//        $model=$query->all();
+//        return $this->render('list',['model'=>$model]);
+//    }
+    public function actionGoodsCategory($id){
         $model= GoodsCategory::find()->roots()->all();
      return $this->render('list',['model'=>$model]);
     }

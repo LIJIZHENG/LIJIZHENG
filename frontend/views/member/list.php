@@ -445,21 +445,20 @@
         <div style="clear:both;"></div>
 
         <!-- 商品列表 start-->
-        <?php foreach ($model as $value):?>
+
         <div class="goodslist mt10">
-            <?php foreach (\backend\models\Goods::getChildren($value->id) as $erji):?>
 
             <ul>
+                <?php foreach ($model as $value):?>
                 <li>
                     <dl>
-<!--                        <dt><a href="/order/details?id=10?id=--><?//=$value->id?><!--">--><?//=$value->logo?><!--</a></dt>-->
+<!--                        <dt><a href="/order/details?id=10?id=--><?//=$value->id?><!--"><img src=" http://admin.yii2shop.com--><?//=$value->logo?><!--" alt=""/></a></dt>-->
                         <dd><a href="/order/details?id=10?id=<?=$value->id?>"><?=$value->name?></a></dt>
                         <dd><a href="/order/details?id=10?id=<?=$value->id?>"><em>已有10人评价</em></a></dt>
                     </dl>
                 <?php endforeach;?>
                 </li>
             </ul>
-                <?php endforeach;?>
 
         </div>
         <!-- 商品列表 end-->

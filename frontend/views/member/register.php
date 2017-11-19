@@ -175,16 +175,16 @@
                         },
                         email: "请输入一个正确的邮箱",
                     }
-                    remote: {
-                        url: "check-tel.php",     //后台处理程序
-                        type: "post",               //数据发送方式
-                        dataType: "json",           //接受数据格式
-                        data: {                     //要传递的数据
-                            username: function() {
-                                return $("#tel").val();
-                            }
-                        }
-                    }
+//                    remote: {
+//                        url: "<?//=\yii\helpers\Url::to(['check-tel'])?>//",     //后台处理程序
+//                        type: "post",               //数据发送方式
+//                        dataType: "json",           //接受数据格式
+//                        data: {                     //要传递的数据
+//                            username: function() {
+//                                return $("#tel").val();
+//                            }
+//                        }
+//                    }
                 })
 
             });

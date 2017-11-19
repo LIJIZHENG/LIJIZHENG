@@ -8,30 +8,11 @@
     <link rel="stylesheet" href="/style/header.css" type="text/css">
     <link rel="stylesheet" href="/style/login.css" type="text/css">
     <link rel="stylesheet" href="/style/footer.css" type="text/css">
-
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
 </head>
 <body>
-
 <!-- 顶部导航 start -->
-<div class="topnav">
-    <div class="topnav_bd w990 bc">
-        <div class="topnav_left">
-
-        </div>
-        <div class="topnav_right fr">
-            <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
-                <li class="line">|</li>
-                <li>我的订单</li>
-                <li class="line">|</li>
-                <li>客户服务</li>
-
-            </ul>
-        </div>
-    </div>
-</div>
 <!-- 顶部导航 end -->
 
 <div style="clear:both;"></div>
@@ -52,26 +33,25 @@
     </div>
     <div class="login_bd">
         <div class="login_form fl">
-            <form action="" method="post" id="login_form">
+            <form action="" method="post" id="myform">
                 <ul>
                     <li>
                         <label for="">用户名：</label>
-                        <input type="text" id="username" class="txt" name="username" />
+                        <input type="text" class="txt" name="username" />
                     </li>
                     <li>
                         <label for="">密码：</label>
-                        <input type="password" id="password" class="txt" name="password" />
-                        <a href="">忘记密码?</a>
+                        <input type="password" class="txt" name="password_hash" />
                     </li>
                     <li class="checkcode">
                         <label for="">验证码：</label>
                         <input type="text"  name="checkcode" />
-                        <img id="img_captcha" alt="" />
-                        <span>看不清？<a href="javascript:;" id="change_captcha">换一张</a></span>
+                        <img  id="img_captcha" alt="" />
+                        <span>看不清？<a id="change_captcha" href="javascript:;">换一张</a></span>
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
-                        <input type="checkbox" class="chb"  /> 保存登录信息
+                        <input type="checkbox" class="chb" name="cookie" /> 保存登录信息
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
@@ -98,7 +78,7 @@
             <h3>还不是商城用户</h3>
             <p>现在免费注册成为商城用户，便能立刻享受便宜又放心的购物乐趣，心动不如行动，赶紧加入吧!</p>
 
-            <a href="regist.html" class="reg_btn">免费注册 >></a>
+            <a href="add" class="reg_btn">免费注册 >></a>
         </div>
 
     </div>
@@ -135,69 +115,51 @@
 <script>
     $().ready(function() {
 // 在键盘按下并释放及提交后验证提交表单
-        $("#login_form").validate({
+        $("#myform").validate({
             rules: {
                 username: {
-                    required: true,
-                    //minlength: 2
-                    //假设需要验证用户唯一
-                    remote: {
-                        url:"<?=\yii\helpers\Url::to(['member/check-name'])?>",
+                    required: true
 
-                    },
                 },
                 password: {
-                    required: true,
-                    //minlength: 5
+                    required: true
                 },
                 checkcode:{
                     check_captcha:true
                 }
-
-
             },
             messages: {
                 username: {
-                    required: "请输入用户名",
-                    //minlength: "用户名必需由两个字母组成"
-                    remote:'用户已存在'
+                    required: "请输入用户名"
                 },
                 password: {
-                    required: "请输入密码",
-                    //minlength: "密码长度不能小于 5 个字母"
-                },
-
+                    required: "请输入密码"
+                }
             },
-            //设置错误信息的标签
-            errorElement:'span'
+            errorElement : 'span'
         })
     });
-    //刷新验证码
-    $("#change_captcha").click(function(){
+    $("#change_captcha").click(function () {
         flush_captcha();
     });
-    var flush_captcha = function(){
-        $.getJSON('<?=\yii\helpers\Url::to(['site/captcha',\yii\captcha\CaptchaAction::REFRESH_GET_VAR=>1])?>',
-            function(data){//{"hash1":721,"hash2":721,"url":"/site/captcha?v=5a07b86f01ce8"}
-                $("#img_captcha").attr('src',data.url);
-                //获取验证码的hash值
-                $("#img_captcha").attr('data-hash',data.hash1);
+    var flush_captcha = function () {
+        $.getJSON('<?=\yii\helpers\Url::to(['site/captcha',\yii\captcha\CaptchaAction::REFRESH_GET_VAR=>1])?>',function (data) {
+            $("#img_captcha").attr('src',data.url);
+            $("#img_captcha").attr('data_hash', data.hash1);
 
-            });
-    }
+        })
+    };
     flush_captcha();
-    //前段验证验证码  获取验证码每个字符的asc码 相加和hash值作对比
-    //var v = 'abc';//a 97 b 98 c 99   hash =  97+98+99
-    //console.log(v.charCodeAt(1));
+    //自定义验证规则
     jQuery.validator.addMethod("check_captcha", function(value, element) {
-        var hash = $("#img_captcha").attr('data-hash');
-        var v =  value.toLowerCase();
+        var hash = $("#img_captcha").attr('data_hash');
+        var v = value.toLowerCase();
         var h = 0;
-        for (var i = v.length - 1; i >= 0; --i) {
+        for (var i = v.length - 1; i >= 0; --i){
             h += v.charCodeAt(i);
         }
         return h == hash;
-    }, "验证码不正确");
+    }, "验证码错误");
 </script>
 </body>
 </html>

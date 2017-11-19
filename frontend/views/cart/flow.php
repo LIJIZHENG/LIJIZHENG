@@ -15,23 +15,9 @@
 </head>
 <body>
 <!-- 顶部导航 start -->
-<div class="topnav">
-    <div class="topnav_bd w990 bc">
-        <div class="topnav_left">
-
-        </div>
-        <div class="topnav_right fr">
-            <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
-                <li class="line">|</li>
-                <li>我的订单</li>
-                <li class="line">|</li>
-                <li>客户服务</li>
-
-            </ul>
-        </div>
-    </div>
-</div>
+<?php
+//require "/shop/nav.php";
+?>
 <!-- 顶部导航 end -->
 
 <div style="clear:both;"></div>
@@ -39,7 +25,7 @@
 <!-- 页面头部 start -->
 <div class="header w990 bc mt15">
     <div class="logo w990">
-        <h2 class="fl"><a href="index.html"><img src="" alt="京西商城"></a></h2>
+        <h2 class="fl"><a href="index.html"><img src="/images/logo.png" alt="京西商城"></a></h2>
         <div class="flow fr">
             <ul>
                 <li class="cur">1.我的购物车</li>
@@ -67,18 +53,17 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($models as $model):?>
-            <tr data-id="<?=$model->id?>">
-                <td class="col1"><a href=""><img src="<?=$model->logo?>" alt="" /></a>
-                    <strong><a href=""><?=$model->name?></a></strong></td>
-                <td class="col3">￥<span><?=$model->shop_price?></span></td>
+        <?php foreach ($models as $value):?>
+            <tr data-id="<?=$value->id?>">
+                <td class="col1"><a href="<?=$value->id?>"><img src="<?=$value->logo?>" alt="" /></a>  <strong><a href="<?=$value->id?>"><?=$value->name?></a></strong></td>
+                <td class="col3">￥<span><?=$value->shop_price?></span></td>
                 <td class="col4">
                     <a href="javascript:;" class="reduce_num"></a>
-                    <input type="text" name="amount" value="1" class="amount"/>
+                    <input type="text" name="amount" value="<?=$carts[$value->id]?>" class="amount"/>
                     <a href="javascript:;" class="add_num"></a>
                 </td>
-                <td class="col5">￥<span><?=$model->shop_price*$carts[$model->id]?></span></td>
-                <td class="col6"><a href="javascript:;" class="btn_del btn btn-danger btn-xs" data-id="<?=$model['id']?>">删除</a></td>
+                <td class="col5">￥<span><?=$value->shop_price?></span></td>
+                <td class="col6"><a href="javascript:;" class="del" id="<?=$value->id?>">删除</a></td>
             </tr>
         <?php endforeach;?>
         </tbody>
@@ -90,7 +75,7 @@
     </table>
     <div class="cart_btn w990 bc mt10">
         <a href="" class="continue">继续购物</a>
-        <a href="" class="checkout">结 算</a>
+        <a href="http://www.yii2shop.com/order/index" class="checkout">结 算</a>
     </div>
 </div>
 <!-- 主体部分 end -->
@@ -123,20 +108,20 @@
 </div>
 <!-- 底部版权 end -->
 <script type="text/javascript">
-    $('.del').click(function () {
-        if(confirm('是否删除')){
-            var url='del';
-            var id=$(this).attr('id');
+    $('.del').click(function() {
+        if(confirm('是否删除该记录?删除后不可恢复!!!')){
+            var url = 'del';
+            var id = $(this).attr('id');
             var that = this;
-            $.post(url,{id:id},function(data){
+            $.post(url,{id:id},function(data) {
                 if(data == '1'){
                     $(that).closest('tr').fadeOut();
                 }else{
                     alert(data);
                 }
-            })
+            });
         }
-    })
+    });
 </script>
 </body>
 </html>
