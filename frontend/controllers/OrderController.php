@@ -7,6 +7,7 @@ use Faker\Provider\Address;
 use frontend\models\Cart;
 use frontend\models\Order;
 use frontend\models\OrderGoods;
+use frontend\models\Site;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -28,10 +29,10 @@ class OrderController extends Controller
     //订单列表
     public function actionIndex()
     {
-        if (\Yii::$app->user->isGuest) {
-            return $this->redirect(['member/login']);
-        } else {
-            $address = Address::find()->all();
+//        if (\Yii::$app->user->isGuest) {
+//            return $this->redirect(['member/login']);
+//        } else {
+            $address = Site::find()->all();
             $carts = Cart::find()->where(['member_id' => \Yii::$app->user->id])->all();
             $carts = ArrayHelper::map($carts, 'goods_id', 'amount');
             $models = Goods::find()->where(['in', 'id', array_keys($carts)])->all();
@@ -46,9 +47,9 @@ class OrderController extends Controller
                 var_dump($request->post());
                 exit;
             }
-            return $this->render("index", ['address' => $address, 'carts' => $carts, 'models' => $models, 'count' => $count, 'price' => $price]);
+            return $this->render('index', ['address' => $address, 'carts' => $carts, 'models' => $models, 'count' => $count, 'price' => $price]);
         }
-    }
+//    }
     //添加订单
     public function actionAdd()
     {

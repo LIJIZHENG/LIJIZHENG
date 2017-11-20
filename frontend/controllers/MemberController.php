@@ -24,17 +24,16 @@ class MemberController extends \yii\web\Controller
             $model->load($request->post(),'');
 //            var_dump($request->post());
             if ($model->validate()) {
-                $model->save(false);
                 $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
                 $model->created_at = time();
-                \Yii::$app->session->setFlash('success', '添加成功');
+
+                $model->save(false);
                 return $this->redirect(['member/regist']);
             }else{
-                var_dump($model->getErrors());
+                var_dump($model->getErrors());die;
             }
-        }else{
-            return $this->render('register', ['model' => $model]);
         }
+            return $this->render('register', ['model' => $model]);
     }
     //AJAX发送短信验证 后台AJAX发送短信功能:
     public function actionAjaxSms($phone){
@@ -78,63 +77,21 @@ class MemberController extends \yii\web\Controller
     }
     //测试阿里大于短信发送功能
     //登录
-//    public function actionLogin(){
-//        //登录表单
-//        $model = new LoginForm();
-//        $request = \Yii::$app->request;
-//        if($request->isPost){
-//            $model->load($request->post(),'');
-//            if($model->validate()){
-//                if($model->login()){
-//                   \Yii::$app->session->setFlash('success','成功登录');
-//                    //跳转
-//                    return $this->redirect(['member/index']);
-//                };
-//            }else{
-//                var_dump($model->getErrors());
-//            }
-//        }else{
-//            return $this->render('login',['model'=>$model]);
-//        }
-//    }
     public function actionLogin(){
-        $model = new \frontend\models\LoginForm();
+        //登录表单
+        $model = new LoginForm();
         $request = \Yii::$app->request;
-        if($request->isPost){
-            $model->load($request->post(),'');
-            if($model->validate()){
-                if($model->login($model->cookie)){
-                    $cookies = \Yii::$app->request->cookies;
-                    $carts = unserialize($cookies->getValue('carts'));
-                    if(!$carts){
-                        $carts = [];
-                    }
-                    foreach($carts as $k=>$v){
-                        $model = Cart::find()->where(['goods_id'=>$k])->andWhere(['member_id'=>\Yii::$app->user->id])->one();
-                        if($model){
-                            $model->amount += $v;
-                            $model->save();
-                        }else{
-                            $cart = new Cart();
-                            $cart->goods_id = $k;
-                            $cart->amount = $v;
-                            $cart->member_id = \Yii::$app->user->id;
-                            $cart->save();
-                        }
-                    }
-                    \Yii::$app->response->cookies->remove('carts');
-                    //成功跳转
-                    \Yii::$app->session->setFlash('success','登陆成功');
-                    return $this->redirect(['member/index']);
-                } else {
-                    return $this->render('login',['model'=>$model]);
-                }
-            }
+        if($request->isPost) {
+            $model->load($request->post(), '');
+            $model->rememberMe = $request->post('rememberMe');
+           if ($model->validate() && $model->check()){
+               return $this->redirect(['member/index']);
+           }else{
+               echo '登录失败';
+           }
         }
-        //显示页面
         return $this->render('login');
     }
-//    注销
     public function actionLognt(){
         \Yii::$app->user->logout();
         return $this->redirect(['login']);
@@ -157,7 +114,7 @@ class MemberController extends \yii\web\Controller
             if ($model->validate()) {
                 $model->save(false);
                 \Yii::$app->session->setFlash('success', '添加成功');
-                return $this->redirect(['member/index']);
+                return $this->redirect(['order/index']);
             }else{
                 var_dump($model->getErrors());
             }

@@ -32,7 +32,6 @@
                         echo '<a href="login">注销</a>';
                     }
                     ?>
-
                 </li>
                 <li class="line">|</li>
                 <li>我的订单</li>
