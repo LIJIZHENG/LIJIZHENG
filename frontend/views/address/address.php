@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>收货地址</title>
     <link rel="stylesheet" href="/style/base.css" type="text/css">
@@ -12,12 +11,29 @@
     <link rel="stylesheet" href="/style/bottomnav.css" type="text/css">
     <link rel="stylesheet" href="/style/footer.css" type="text/css">
 
-    <script type="text/javascript" src="/js/jsAddresss.js"></script>
-    <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
+
+    <script src="/jQueryValidate/jquery.js"></script>
+    <script src="/jQueryValidate/jquery-1.11.1.js"></script>
+    <script src="/jQueryValidate/jquery.validate.min.js"></script>
     <script type="text/javascript" src="/js/header.js"></script>
     <script type="text/javascript" src="/js/home.js"></script>
+    <script type="text/javascript" src="/js/address.js"></script>
+
+    <style>
+        span.error {
+            padding-left: 16px;
+
+            padding-bottom: 2px;
+
+            font-weight: bold;
+
+            color: red;
+        }
+    </style>
+
 </head>
 <body>
+
 <!-- 顶部导航 start -->
 <div class="topnav">
     <div class="topnav_bd w1210 bc">
@@ -78,13 +94,13 @@
                 </dt>
                 <dd>
                     <div class="prompt">
-                        您好，请<a href="">登录</a>
+                        您好<?=Yii::$app->user->isGuest?'，请<a href="'.\yii\helpers\Url::to(['login/login']).'">登录</a>':Yii::$app->user->identity->username?>
                     </div>
                     <div class="uclist mt10">
                         <ul class="list1 fl">
                             <li><a href="">用户信息></a></li>
-                            <li><a href="">我的订单></a></li>
-                            <li><a href="">收货地址></a></li>
+                            <li><a href="<?=Yii::$app->user->isGuest?\yii\helpers\Url::to(['login/login']):\yii\helpers\Url::to(['order/list'])?>">我的订单></a></li>
+                            <li><a href="<?=Yii::$app->user->isGuest?\yii\helpers\Url::to(['login/login']):\yii\helpers\Url::to(['address/index'])?>">收货地址></a></li>
                             <li><a href="">我的收藏></a></li>
                         </ul>
 
@@ -114,7 +130,7 @@
         <div class="cart fl">
             <dl>
                 <dt>
-                    <a href="">去购物车结算</a>
+                    <a href="<?=\yii\helpers\Url::to(['cart/index'])?>">去购物车结算</a>
                     <b></b>
                 </dt>
                 <dd>
@@ -461,40 +477,70 @@
             </dl>
         </div>
     </div>
-    左侧导航菜单
-    <a href="/member/add">添加订单</a>
-    <table class="table table-bordered">
-        <tr>
-            <td>收货人</td>
-            <td>省市</td>
-            <td>市辖区</td>
-            <td>城区</td>
-            <td>手机号码</td>
-            <td>详细地址</td>
-            <td></td>
-        </tr>
-        <?php foreach ($model as $v):?>
-            <tr>
-                <td><?=$v['name']?></td>
-                <td><?=$v['cmbProvince']?></td>
-                <td><?=$v['cmbCity']?></td>
-                <td><?=$v['cmbArea']?></td>
-                <td><?=$v['tel']?></td>
-                <td><?=$v['address']?></td>
-                <td>
-                    <a href="<?=\yii\helpers\Url::to(['member/edit','name'=>$v['name']])?>">修改</a>
-                    <a href="<?=\yii\helpers\Url::to(['member/del','name'=>$v['name']])?>">删除</a>
-                </td>
-            </tr>
-        <?php endforeach;?>
-    </table>
-    右侧内容区域
-<!-- 右侧内容区域 end -->
+    <!-- 左侧导航菜单 end -->
+
+    <!-- 右侧内容区域 start -->
+    <div class="content fl ml10">
+        <div class="address_hd">
+            <h3>收货地址薄</h3>
+            <?php $i = 1; foreach ($address as $address):?>
+                <dl>
+                    <dt><?=$i.'.'.$address->name.' '.$address->province.$address->city.$address->area.$address->detail.' '.$address->phone?></dt>
+                    <dd>
+                        <a href="<?=\yii\helpers\Url::to(['edit','id'=>$address->id])?>" class="edit">修改</a>
+                        <a href="javascript:;" data-id="<?=$address->id?>" class="del">删除</a>
+                        <?=$address->status==1?'':'<a href="'.\yii\helpers\Url::to(['set-default','id'=>$address->id]).'" class="setDefault" >设为默认地址</a>'?>
+                    </dd>
+                </dl>
+                <?php $i++; endforeach;?>
+        </div>
+
+        <div class="address_bd mt10">
+            <h4>新增收货地址</h4>
+            <form action="<?=\yii\helpers\Url::to(isset($editAddress->name)?['edit']:['add'])?>" method="post" id="address_form" name="address_form">
+                <ul>
+                    <li>
+                        <?=isset($editAddress->id)?'<input type="hidden" name="id" value="'.$editAddress->id.'"/>':''?>
+                        <label for="name"><span>*</span>收 货 人：</label>
+                        <input type="text" name="name" id="name" class="txt" value="<?=isset($editAddress->name)?$editAddress->name:''?>" />
+                    </li>
+                    <li>
+                        <label for="cmbProvince"><span>*</span>所在地区：</label>
+                        <select name="province" id="cmbProvince">
+                        </select>
+                        <select name="city" id="cmbCity">
+                        </select>
+                        <select name="area" id="cmbArea">
+                        </select>
+                        <script type="text/javascript">
+                        </script>
+                    </li>
+                    <li>
+                        <label for="detail"><span>*</span>详细地址：</label>
+                        <input type="text" name="detail" id="detail" class="txt address" value="<?=isset($editAddress->detail)?$editAddress->detail:''?>"/>
+                    </li>
+                    <li>
+                        <label for="phone"><span>*</span>手机号码：</label>
+                        <input type="text" name="phone" id="tel" class="txt" value="<?=isset($editAddress->phone)?$editAddress->phone:''?>"/>
+                    </li>
+                    <li>
+                        <label for="status">&nbsp;</label>
+                        <input type="checkbox" name="status" id="status" value="1" class="check" <?=(isset($editAddress->status) && $editAddress->status==1)?'checked':''?> />设为默认地址
+                    </li>
+                    <li>
+                        <label for="">&nbsp;</label>
+                        <input type="submit" id="save" class="btn" value="保存" />
+                    </li>
+                </ul>
+            </form>
+        </div>
+
+    </div>
+    <!-- 右侧内容区域 end -->
 </div>
 <!-- 页面主体 end-->
 
 <div style="clear:both;"></div>
-
 <!-- 底部导航 start -->
 <div class="bottomnav w1210 bc mt10">
     <div class="bnav1">
@@ -584,32 +630,79 @@
         <a href=""><img src="/images/beian.gif" alt="" /></a>
     </p>
 </div>
+<script type="text/javascript">
+    addressInit('cmbProvince', 'cmbCity', 'cmbArea'
+        <?=isset($editAddress)?(",'{$editAddress->province}','{$editAddress->city}','{$editAddress->area}'"):''?>);
+</script>
+<!-- 底部版权 end -->
 <script>
-    //    $().ready(function() {
-    //// 在键盘按下并释放及提交后验证提交表单
-    //        $("#result").validate({
-    //            rules: {
-    //                name: {
-    //                    required: true,
-    //                    minlength: 2
-    //                },
-    //                site: {
-    //                    required: true,
-    //                    minlength: 2
-    //                }
-    //                tel: {
-    //                    required: "#newsletter:checked",
-    //                    minlength: 2
-    //                },
-    //                messages: {
-    //                   name: {
-    //                        required: "请输入收货名",
-    //                        minlength: "收货名必需由两个字母组成"
-    //                    },
-    //            }
-    //        })
-    //    });
+    $().ready(function() {
+// 在键盘按下并释放及提交后验证提交表单
+        $("#address_form").validate({
+            rules: {
+                name: {
+                    required: true,
+                },
+                province: {
+                    required: true,
+                },
+                city: {
+                    required: true
+                },
+                area: {
+                    required: true
+                },
+                detailed_address: {
+                    required: true
+                },
+                phone: {
+                    required: true,
+                    checkTel: true
+                }
+            },
+            messages: {
+                name: {
+                    required: "请输入收货人"
+                },
+                province: {
+                    required: "请选择省份"
+                },
+                city: {
+                    required: "请选择城市"
+                },
+                area: {
+                    required: "请选择地区"
+                },
+                detail: {
+                    required: "请输入详细地址"
+                },
+                phone: {
+                    required: "请输入手机号码",
+                }
+            },
+            errorElement: 'span',
+        });
+        //验证手机号
+        jQuery.validator.addMethod("checkTel", function(value, element) {
+            var reg = /^1[34578]\d{9}$/;
+            return reg.test(value);
+        }, "请输入正确手机号码");
 
+        $('.del').click(function () {
+            if (confirm('是否要删除?')){
+                var id = $(this).attr('data-id');
+                var that = this;
+                $.post('delete',{'id':id},function (data) {
+                    if (data){
+                        $(that).closest('dl').remove();
+                    }else {
+                        alert('删除失败');
+                    }
+                })
+            }
+        });
+
+    });
 </script>
 </body>
 </html>

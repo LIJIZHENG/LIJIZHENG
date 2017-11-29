@@ -3,13 +3,15 @@ namespace frontend\controllers;
 use backend\models\Goods;
 use backend\models\GoodsCategory;
 use backend\models\Permissions;
+use Faker\Provider\Address;
 use frontend\components\Sms;
 use backend\models\Goods_intro;
 use frontend\models\Cart;
-use frontend\models\Index;
 use frontend\models\LoginForm;
 use frontend\models\Member;
 use frontend\models\Site;
+use frontend\models\SphinxClient;
+use yii\helpers\ArrayHelper;
 use yii\web\Request;
 class MemberController extends \yii\web\Controller
 {
@@ -103,9 +105,8 @@ class MemberController extends \yii\web\Controller
         }
         return 'true';
     }
-    public function actionAdd()
-    {
-        $model = new Site();
+    public function actionAdd(){
+        $model = new  Site();
         $request = new Request();
         if ($request->isPost) {
 //            var_dump($request->isPost);die;
@@ -139,6 +140,28 @@ class MemberController extends \yii\web\Controller
             return $this->render('editress', ['model' => $model]);
         }
     }
+    //中文分词
+    //中文分词搜索测试
+    public function actionSearch($keyword){
+        $cl = new SphinxClient();
+        $cl->SetServer ( '127.0.0.1', 9312);//设置sphinx的searchd服务信息
+        $cl->SetConnectTimeout ( 10 );//超时
+        $cl->SetArrayResult ( true );//结果以数组形式返回
+        $cl->SetMatchMode ( SPH_MATCH_EXTENDED2);//设置匹配模式
+        $cl->SetLimits(0, 1000);//设置分页
+        $info = $keyword;//查询关键字
+        //进行查询   Query(查询关键字,使用的索引)
+        $res = $cl->Query($info, 'goods');
+        if(isset($res['matches'])){
+            //查询到结果
+            $ids = ArrayHelper::map($res['matches'],'id','id');
+            $models = Goods::find()->where(['in','id',$ids])->all();
+//            var_dump($models);
+        }else{
+           return $this->redirect('index');
+        }
+        return $this->render('member/goods-category',['models'=>$models]);
+    }
     public function actionIndex(){
         $model=Goods::find()->all();
         return $this->render('index',['model'=>$model]);
@@ -151,22 +174,6 @@ class MemberController extends \yii\web\Controller
 
         return $this->redirect(['member/index']);
     }
-    //商品列表
-//    public function actionContent($id){
-//        $goods_category = GoodsCategory::find()->where(['id'=>$id])->one();
-//        if($goods_category->depth == 2){
-//            $query = Goods::find()->where(['goods_category_id'=>$id]);
-//        }else{
-//            $ids = $goods_category->Children()->andWhere(['depth'=>2])->column();
-//            $query = Goods::find()->where(['in','goods_category_id',$ids]);
-//        }
-////        $pager = new Permissions();
-////        $pager->pageSize = 8;
-////        $pager->totalCount = $query->count();
-////        $model = $query->limit($pager->limit)->offset($pager->offset)->all();
-//        $model=$query->all();
-//        return $this->render('list',['model'=>$model]);
-//    }
     public function actionGoodsCategory($id){
         $model= GoodsCategory::find()->roots()->all();
      return $this->render('list',['model'=>$model]);

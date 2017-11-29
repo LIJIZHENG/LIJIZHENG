@@ -15,9 +15,7 @@
 </head>
 <body>
 <!-- 顶部导航 start -->
-<?php
-//require "/shop/nav.php";
-?>
+
 <!-- 顶部导航 end -->
 
 <div style="clear:both;"></div>

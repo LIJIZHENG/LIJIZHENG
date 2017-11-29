@@ -26,7 +26,8 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li>您好<?=Yii::$app->user->isGuest?'':Yii::$app->user->identity->username?>，欢迎来到京西！[<a href="<?=\yii\helpers\Url::to(Yii::$app->user->isGuest?['login/login']:['login/logout'])?>"><?=Yii::$app->user->isGuest?'登录':'注销'?></a>]
+                    <?=Yii::$app->user->isGuest?'[<a href="'.\yii\helpers\Url::to(['member/register']).'">免费注册</a>]':''?></li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -460,7 +461,7 @@
             </dl>
         </div>
     </div>
-     左侧导航菜单
+<!--     //左侧导航菜单-->
     <table class="table table-bordered">
         <tr>
             <td>收货人</td>
@@ -481,7 +482,7 @@
         </tr>
         <?php endforeach;?>
     </table>
-    右侧内容区域
+<!--    //右侧内容区域-->
         <div class="address_bd mt10">
             <h4>新增收货地址</h4>
             <form action="" method="post" id="">
@@ -520,7 +521,7 @@
         </div>
     </div>
     <!-- 右侧内容区域 end -->
-</div>
+<!--</div>-->
 <!-- 页面主体 end-->
 
 <div style="clear:both;"></div>

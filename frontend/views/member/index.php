@@ -23,16 +23,8 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！
-                    <?php
-                    if(Yii::$app->user->isGuest){
-                        echo'<a href="login">登录</a>
- [<a href="register">免费注册</a>]';
-                    }else{
-                        echo '<a href="login">注销</a>';
-                    }
-                    ?>
-                </li>
+                <li>您好<?=Yii::$app->user->isGuest?'':Yii::$app->user->identity->username?>，欢迎来到京西！[<a href="<?=\yii\helpers\Url::to(Yii::$app->user->isGuest?['login/login']:['login/logout'])?>"><?=Yii::$app->user->isGuest?'登录':'注销'?></a>]
+                    <?=Yii::$app->user->isGuest?'[<a href="'.\yii\helpers\Url::to(['member/register']).'">免费注册</a>]':''?></li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -55,8 +47,8 @@
         <div class="search fl">
             <div class="search_form">
                 <div class="form_left fl"></div>
-                <form action="" name="serarch" method="get" class="fl">
-                    <input type="text" class="txt" value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
+                <form action="<?=\yii\helpers\Url::to(['member/search'])?>" name="keyword" method="post" class="fl">
+                    <input type="text" class="txt" name="keyword"  value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
                 </form>
                 <div class="form_right fl"></div>
             </div>

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use backend\models\Goods;
 use backend\models\Goods_intro;
 use backend\models\GoodsCategory;
+use frontend\models\SphinxClient;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\data\Pagination;
@@ -406,4 +407,5 @@ class SiteController extends Controller
                 break;
         }
     }
+
 }

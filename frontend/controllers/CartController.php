@@ -19,7 +19,7 @@ class CartController extends Controller
     public $enableCsrfValidation = false;
     //购物车列表
     public function actionCart(){
-        if(\Yii::$app->user->isGuest){//未登录
+        if(!\Yii::$app->user->isGuest){//未登录
             $cookies = \Yii::$app->request->cookies;
             $carts = $cookies->getValue('carts');
             if($carts){

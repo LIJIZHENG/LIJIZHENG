@@ -10,6 +10,7 @@ namespace frontend\controllers;
 
 
 use backend\models\Goods;
+use backend\models\Goods_intro;
 use backend\models\GoodsCategory;
 use backend\models\GoodsGallery;
 use backend\models\GoodsIntro;
@@ -45,7 +46,7 @@ class GoodsCategoryController extends Controller
     public function actionDetails($id){
         $model = Goods::findOne($id);
         $img = GoodsGallery::find()->where(['goods_id'=>$id])->all();
-        $intro = GoodsIntro::findOne(['goods_id'=>$id]);
+        $intro =Goods_intro::findOne(['goods_id'=>$id]);
         $request = \Yii::$app->request;
         $cart = new Cart();
         if($request->isPost) {
